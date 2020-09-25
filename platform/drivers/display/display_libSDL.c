@@ -62,7 +62,7 @@ void lcd_init()
     else
     {
 
-        window = SDL_CreateWindow("",
+        window = SDL_CreateWindow(" ",
                                   SDL_WINDOWPOS_UNDEFINED,
                                   SDL_WINDOWPOS_UNDEFINED,
                                   SCREEN_WIDTH,SCREEN_HEIGHT,
@@ -80,7 +80,11 @@ void lcd_init()
 
 void lcd_terminate()
 {
+    while(inProgress) { }         /* Wait until current render finishes */
+    printf("Terminating SDL display emulator, goodbye!\n");
+    free(frameBuffer);
     SDL_DestroyWindow(window);
+    SDL_Quit();
 }
 
 uint16_t lcd_screenWidth()
