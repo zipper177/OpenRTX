@@ -33,7 +33,6 @@
 #include <os.h>
 #include <lib_mem.h>
 #include <stdio.h>
-#include "stm32f4xx.h"
 #include "gpio.h"
 #include "delays.h"
 #include "display.h"
