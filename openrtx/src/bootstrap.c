@@ -26,37 +26,68 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>   *
  ***************************************************************************/
 
-#include <stdint.h>
 #include <stdio.h>
-#include <stdlib.h>
+#include <app_cfg.h>
 #include <os.h>
-#include "gpio.h"
-#include "graphics.h"
-#include "hwconfig.h"
+#include <lib_mem.h>
+#include "stm32f4xx.h"
 #include "platform.h"
+#include "gpio.h"
 
-int main(void)
+/*
+ * Entry point for application code, not in this translation unit.
+ */
+int main(int argc, char *argv[]);
+
+/*
+ * OS startup task, will call main() when all initialisations are done.
+ */
+static OS_TCB        startTCB;
+static CPU_STK_SIZE  startStk[APP_CFG_TASK_START_STK_SIZE];
+static void startTask(void *arg);
+
+void systemBootstrap()
 {
-    gpio_setMode(GPIOE, 0, OUTPUT);
-    gpio_setMode(GPIOE, 1, OUTPUT);
+    OS_ERR err;
 
-    // Init the graphic stack
-    gfx_init();
-    platform_setBacklightLevel(255);
+    OSInit(&err);
 
-    point_t origin = {0, SCREEN_HEIGHT / 2};
-    color_t color_yellow = {250, 180, 19};
-    char *buffer = "OpenRTX";
+    OSTaskCreate((OS_TCB     *)&startTCB,
+                 (CPU_CHAR   *)" ",
+                 (OS_TASK_PTR ) startTask,
+                 (void       *) 0,
+                 (OS_PRIO     ) APP_CFG_TASK_START_PRIO,
+                 (CPU_STK    *)&startStk[0],
+                 (CPU_STK     )startStk[APP_CFG_TASK_START_STK_SIZE / 10u],
+                 (CPU_STK_SIZE) APP_CFG_TASK_START_STK_SIZE,
+                 (OS_MSG_QTY  ) 0,
+                 (OS_TICK     ) 0,
+                 (void       *) 0,
+                 (OS_OPT      )(OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR),
+                 (OS_ERR     *)&err);
 
-    OS_ERR os_err;
+    OSStart(&err);
 
-    // Task infinite loop
-    while(1)
-    {
-        gfx_clearScreen();
-        gfx_print(origin, buffer, FONT_SIZE_4, TEXT_ALIGN_CENTER, color_yellow);
-        gfx_render();
-        while(gfx_renderingInProgress());
-        OSTimeDlyHMSM(0u, 0u, 0u, 100u, OS_OPT_TIME_HMSM_STRICT, &os_err);
-    }
+    for(;;) ;
+}
+
+static void startTask(void* arg)
+{
+    (void) arg;
+
+    CPU_Init();
+
+    /* SysTick is available only for ARM-based targets */
+    #ifdef __arm__
+    OS_CPU_SysTickInitFreq(SystemCoreClock);
+    #endif
+
+    /* Initialise platform drivers */
+    platform_init();
+
+    /* Jump to application code */
+    main(0, NULL);
+
+    /* If main returns loop indefinitely */
+    for(;;) ;
 }
