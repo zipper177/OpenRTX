@@ -29,6 +29,7 @@
 
 #include <stm32f4xx.h>
 #include "platform.h"
+#include "hwconfig.h"
 #include "gpio.h"
 
 void platform_init()
