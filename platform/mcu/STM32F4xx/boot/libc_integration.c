@@ -42,6 +42,8 @@ void pthread_mutex_lock() {}
 void pthread_mutex_destroy() {}
 int pthread_setcancelstate(int state, int *oldstate)
 {
+    (void) state;
+    (void) oldstate;
     return 0;
 }
 
@@ -70,6 +72,11 @@ extern "C" {
  */
 int __register_exitproc(int type, void (*fn)(void), void *arg, void *d)
 {
+    (void) type;
+    (void) fn;
+    (void) arg;
+    (void) d;
+
     return 0;
 }
 
@@ -78,7 +85,11 @@ int __register_exitproc(int type, void (*fn)(void), void *arg, void *d)
  * \param code the exit code, for example with exit(1), code==1
  * \param d __dso_handle, see __register_exitproc
  */
-void __call_exitprocs(int code, void *d) {}
+void __call_exitprocs(int code, void *d)
+{
+    (void) code;
+    (void) d;
+}
 
 /**
  * \internal
@@ -100,7 +111,8 @@ void *__dso_handle=(void*) &__dso_handle;
  */
 void _exit(int status)
 {
-	for(;;) ;
+    (void) status;
+    for(;;) ;
 }
 
 /**
@@ -109,6 +121,8 @@ void _exit(int status)
  */
 void *_sbrk_r(struct _reent *ptr, ptrdiff_t incr)
 {
+    (void) ptr;
+
     //This is the absolute start of the heap
     extern char _end asm("_end"); //defined in the linker script
     //This is the absolute end of the heap
@@ -167,6 +181,11 @@ struct _reent *__getreent()
  */
 int _open_r(struct _reent *ptr, const char *name, int flags, int mode)
 {
+    (void) ptr;
+    (void) name;
+    (void) flags;
+    (void) mode;
+
     return -1;
 }
 
@@ -176,6 +195,9 @@ int _open_r(struct _reent *ptr, const char *name, int flags, int mode)
  */
 int _close_r(struct _reent *ptr, int fd)
 {
+    (void) ptr;
+    (void) fd;
+
     return -1;
 }
 
@@ -207,7 +229,7 @@ int _read_r(struct _reent *ptr, int fd, void *buf, size_t cnt)
         for(;;)
         {
             ssize_t r = vcom_readBlock(buf, cnt);
-            if((r < 0) || (r == cnt)) return r;
+            if((r < 0) || (r == (ssize_t)(cnt))) return r;
         }
     }
     else
@@ -228,11 +250,20 @@ int _read(int fd, void *buf, size_t cnt)
  */
 off_t _lseek_r(struct _reent *ptr, int fd, off_t pos, int whence)
 {
+    (void) ptr;
+    (void) fd;
+    (void) pos;
+    (void) whence;
+
     return -1;
 }
 
 off_t _lseek(int fd, off_t pos, int whence)
 {
+    (void) fd;
+    (void) pos;
+    (void) whence;
+
     return -1;
 }
 
@@ -242,11 +273,18 @@ off_t _lseek(int fd, off_t pos, int whence)
  */
 int _fstat_r(struct _reent *ptr, int fd, struct stat *pstat)
 {
+    (void) ptr;
+    (void) fd;
+    (void) pstat;
+
     return -1;
 }
 
 int _fstat(int fd, struct stat *pstat)
 {
+    (void) fd;
+    (void) pstat;
+
     return -1;
 }
 
@@ -256,6 +294,10 @@ int _fstat(int fd, struct stat *pstat)
  */
 int _stat_r(struct _reent *ptr, const char *file, struct stat *pstat)
 {
+    (void) ptr;
+    (void) file;
+    (void) pstat;
+
     return -1;
 }
 
@@ -267,16 +309,23 @@ int _stat_r(struct _reent *ptr, const char *file, struct stat *pstat)
  */
 int _isatty_r(struct _reent *ptr, int fd)
 {
+    (void) ptr;
+    (void) fd;
+
     return 1;
 }
 
 int isatty(int fd)
 {
+    (void) fd;
+
     return 1;
 }
 
 int _isatty(int fd)
 {
+    (void) fd;
+ 
     return 1;
 }
 
@@ -286,6 +335,9 @@ int _isatty(int fd)
  */
 int mkdir(const char *path, mode_t mode)
 {
+    (void) path;
+    (void) mode;
+
     return -1;
 }
 
@@ -295,6 +347,10 @@ int mkdir(const char *path, mode_t mode)
  */
 int _link_r(struct _reent *ptr, const char *f_old, const char *f_new)
 {
+    (void) ptr;
+    (void) f_old;
+    (void) f_new;
+
     return -1;
 }
 
@@ -304,6 +360,9 @@ int _link_r(struct _reent *ptr, const char *f_old, const char *f_new)
  */
 int _unlink_r(struct _reent *ptr, const char *file)
 {
+    (void) ptr;
+    (void) file;
+
     return -1;
 }
 
@@ -313,6 +372,9 @@ int _unlink_r(struct _reent *ptr, const char *file)
  */
 clock_t _times_r(struct _reent *ptr, struct tms *tim)
 {
+    (void) ptr;
+    (void) tim;
+
     return -1;
 }
 
@@ -327,6 +389,9 @@ clock_t _times_r(struct _reent *ptr, struct tms *tim)
  */
 int _kill_r(struct _reent* ptr, int pid, int sig)
 {
+    (void) ptr;
+    (void) sig;
+
     if(pid == 0)
         _exit(1);
     else
@@ -335,7 +400,7 @@ int _kill_r(struct _reent* ptr, int pid, int sig)
 
 int _kill(int pid, int sig)
 {
-    _kill_r(0, pid, sig);
+    return _kill_r(0, pid, sig);
 }
 
 /**
@@ -344,6 +409,7 @@ int _kill(int pid, int sig)
  */
 int _getpid_r(struct _reent* ptr)
 {
+    (void) ptr;
     return 0;
 }
 
@@ -358,11 +424,16 @@ int _getpid()
  */
 int _wait_r(struct _reent *ptr, int *status)
 {
+    (void) ptr;
+    (void) status;
+
     return -1;
 }
 
 int _fork_r(struct _reent *ptr)
 {
+    (void) ptr;
+
     return -1;
 }
 
