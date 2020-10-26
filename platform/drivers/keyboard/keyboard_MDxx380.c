@@ -1,6 +1,7 @@
 /***************************************************************************
  *   Copyright (C) 2020 by Federico Amedeo Izzo IU2NUO,                    *
  *                         Niccolò Izzo IU2KIN                             *
+ *                         Frederik Saraci IU2NRO                          *
  *                         Silvano Seva IU2KWO                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -27,55 +28,76 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>   *
  ***************************************************************************/
 
-#ifndef HWCONFIG_H
-#define HWCONFIG_H
+#include <stdio.h>
+#include <stdint.h>
+#include "gpio.h"
+#include "delays.h"
+#include "keyboard.h"
+#include "hwconfig.h"
 
-#include <stm32f4xx.h>
+void kbd_init()
+{
+    /* Set the two row lines as outputs */
+    gpio_setMode(KB_ROW1, OUTPUT);
+    gpio_setMode(KB_ROW2, OUTPUT);
+    gpio_clearPin(KB_ROW1);
+    gpio_clearPin(KB_ROW2);
+}
 
-/* Screen dimensions */
-#define SCREEN_WIDTH 160
-#define SCREEN_HEIGHT 128
+void kbd_terminate()
+{
+    /* Back to default state */
+    gpio_clearPin(KB_ROW1);
+    gpio_clearPin(KB_ROW2);
+    gpio_setMode(KB_ROW1, INPUT);
+    gpio_setMode(KB_ROW2, INPUT);
 
-/* Display */
-#define LCD_D0  GPIOD,14
-#define LCD_D1  GPIOD,15
-#define LCD_D2  GPIOD,0
-#define LCD_D3  GPIOD,1
-#define LCD_D4  GPIOE,7
-#define LCD_D5  GPIOE,8
-#define LCD_D6  GPIOE,9
-#define LCD_D7  GPIOE,10
-#define LCD_WR  GPIOD,5
-#define LCD_RD  GPIOD,4
-#define LCD_CS  GPIOD,6
-#define LCD_RS  GPIOD,12
-#define LCD_RST GPIOD,13
-#define LCD_BKLIGHT GPIOC,6
+}
 
-/* Signalling LEDs */
-#define GREEN_LED  GPIOE,0
-#define RED_LED    GPIOE,1
+uint32_t kbd_getKeys()
+{
+    /*
+     * First of all, configure the row lines as inputs. Since they are in common
+     * with the display, their configuration can have been screwed up by display
+     * driver among two subsequent calls of this function.
+     */
+    gpio_setMode(LCD_D0, INPUT);
+    gpio_setMode(LCD_D1, INPUT);
+    gpio_setMode(LCD_D2, INPUT);
+    gpio_setMode(LCD_D3, INPUT);
+    gpio_setMode(LCD_D4, INPUT);
+    gpio_setMode(LCD_D5, INPUT);
+    gpio_setMode(LCD_D6, INPUT);
+    gpio_setMode(LCD_D7, INPUT);
 
-/* Analog inputs */
-#define AIN_VOLUME GPIOA,0
-#define AIN_VBAT   GPIOA,1
-#define AIN_MIC    GPIOA,3
-#define AIN_RSSI   GPIOB,0
+    /*
+     * Scan keyboard by coloumns.
+     * For key configuration, see: https://www.qsl.net/dl4yhf/RT3/md380_hw.html#keyboard
+     */
+    uint32_t keys = 0;
+    gpio_setPin(KB_ROW1);
 
-/* Channel selection rotary encoder */
-#define CH_SELECTOR_0 GPIOE,14
-#define CH_SELECTOR_1 GPIOE,15
-#define CH_SELECTOR_2 GPIOB,10
-#define CH_SELECTOR_3 GPIOB,11
+    if(gpio_readPin(LCD_D7)) keys |= KEY_STAR;
+    if(gpio_readPin(LCD_D2)) keys |= KEY_3;
+    if(gpio_readPin(LCD_D1)) keys |= KEY_2;
+    if(gpio_readPin(LCD_D0)) keys |= KEY_1;
+    if(gpio_readPin(LCD_D6)) keys |= KEY_0;
+    if(gpio_readPin(LCD_D5)) keys |= KEY_6;
+    if(gpio_readPin(LCD_D4)) keys |= KEY_5;
+    if(gpio_readPin(LCD_D3)) keys |= KEY_4;
 
-/* Push-to-talk switch */
-#define PTT_SW GPIOE,11
+    gpio_clearPin(KB_ROW1);
+    gpio_setPin(KB_ROW2);
 
-/*
- * Keyboard. Here we define only rows, since coloumn lines are the same as
- * LCD_Dx. See also: https://www.qsl.net/dl4yhf/RT3/md380_hw.html#keyboard
- */
-#define KB_ROW1 GPIOA,6 /* K1 */
-#define KB_ROW2 GPIOD,2 /* K2 */
+    if(gpio_readPin(LCD_D7)) keys |= KEY_ESC;
+    if(gpio_readPin(LCD_D2)) keys |= KEY_DOWN;
+    if(gpio_readPin(LCD_D1)) keys |= KEY_UP;
+    if(gpio_readPin(LCD_D0)) keys |= KEY_ENTER;
+    if(gpio_readPin(LCD_D6)) keys |= KEY_HASH;
+    if(gpio_readPin(LCD_D5)) keys |= KEY_9;
+    if(gpio_readPin(LCD_D4)) keys |= KEY_8;
+    if(gpio_readPin(LCD_D3)) keys |= KEY_7;
 
-#endif
+    gpio_clearPin(KB_ROW2);
+    return keys;
+}
