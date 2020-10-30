@@ -1,5 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2020 by Federico Izzo IU2NUO, Niccolò Izzo IU2KIN and   *
+ *   Copyright (C) 2020 by Federico Amedeo Izzo IU2NUO,                    *
+ *                         Niccolò Izzo IU2KIN,                            *
  *                         Silvano Seva IU2KWO                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -26,54 +27,61 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>   *
  ***************************************************************************/
 
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <os.h>
-#include "gpio.h"
-#include "graphics.h"
-#include "hwconfig.h"
-#include "platform.h"
-#include "state.h"
-#include "keyboard.h"
-#include "ui.h"
+#ifndef STATE_H
+#define STATE_H
 
+/**
+ * Part of this structure has been commented because the corresponding
+ * functionality is not yet implemented.
+ * Uncomment once the related feature is ready
+ */
 
-int main(void)
-{
-    OS_ERR os_err;
-
-    // Init the graphic stack
-    gfx_init();
-    platform_setBacklightLevel(255);
-
-    // Print splash screen
-    point_t splash_origin = {0, SCREEN_HEIGHT / 2};
-    color_t color_yellow_fab413 = {250, 180, 19};
-    char *splash_buf = "OpenRTX";
-    gfx_clearScreen();
-    gfx_print(splash_origin, splash_buf, FONT_SIZE_4, TEXT_ALIGN_CENTER, color_yellow_fab413);
-    gfx_render();
-    while(gfx_renderingInProgress());
-    OSTimeDlyHMSM(0u, 0u, 0u, 500u, OS_OPT_TIME_HMSM_STRICT, &os_err);
+typedef struct state_t {
+    //enum ui_screen;
+    //enum tuner_mode;
+    //enum radio_mode;
     
-    // Clear screen
-    gfx_clearScreen();
-    gfx_render();
-    while(gfx_renderingInProgress());
+    //time_t rx_status_tv;
+    //bool rx_status;
+    
+    //time_t tx_status_tv;
+    //bool tx_status;
+    
+    //freq_t rx_freq;
+    //freq_t tx_freq;
+    
+    //float tx_power;
+    
+    //uint8_t squelch;
+    
+    //tone_t rx_tone;
+    //tone_t tx_tone;
+    
+    //ch_t *channel;
+    
+//#ifdef DMR_ENABLED
+    //uint8_t dmr_color;
+    //uint8_t dmr_timeslot;
+    //dmr_contact_t *dmr_contact;
+//#endif
+} state_t;
 
+/**
+ * This function initialises the Radio state, acquiring the information
+ * needed to populate it from device drivers. 
+ */
+void state_init();
 
-    // UI update infinite loop
-    while(1)
-    {
-	state_t state = state_update();
-	uint32_t keys = kbd_getKeys();
-	bool renderNeeded = ui_update(state, keys);
-	if(renderNeeded)
-	{
-	    gfx_render();
-	    while(gfx_renderingInProgress());
-	}
-        OSTimeDlyHMSM(0u, 0u, 0u, 100u, OS_OPT_TIME_HMSM_STRICT, &os_err);
-    }
-}
+/**
+ * This function updates the state information by sourcing the
+ * updated values of the various fields of the state_t struct
+ * from corresponding device drivers.
+ */
+state_t state_update();
+
+/**
+ * This function terminates the Radio state.
+ */
+void state_terminate();
+
+#endif /* STATE_H */
