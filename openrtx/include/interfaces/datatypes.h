@@ -27,63 +27,26 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>   *
  ***************************************************************************/
 
-#ifndef STATE_H
-#define STATE_H
+#ifndef DATATYPES_H
+#define DATATYPES_H
 
-#include <datatypes.h>
+/**                                                                             
+ * \brief CTCSS and DCS type definition.                                        
+ *                                                                              
+ * Continuous Tone Controlled Squelch System (CTCSS)                            
+ * sub-audible tone frequency are expressed in \em tenth of Hz.                 
+ * For example, the subaudible tone of 88.5 Hz is represented within            
+ * Hamlib by 885.                                                               
+ *                                                                              
+ * Digitally-Coded Squelch codes are simple direct integers.                    
+ */                                                                             
+typedef unsigned int tone_t;
+ 
+/**                                                                             
+ * \brief Frequency type,                                                       
+ *                                                                              
+ * Frequency type unit in Hz, able to hold SHF frequencies.                     
+ */ 
+typedef float freq_t;
 
-/**
- * Part of this structure has been commented because the corresponding
- * functionality is not yet implemented.
- * Uncomment once the related feature is ready
- */
-
-typedef struct state_t {
-    //enum ui_screen;
-    //enum tuner_mode;
-    //enum radio_mode;
-    
-    //time_t rx_status_tv;
-    //bool rx_status;
-    
-    //time_t tx_status_tv;
-    //bool tx_status;
-    
-    freq_t rx_freq;
-    freq_t tx_freq;
-    
-    //float tx_power;
-    
-    //uint8_t squelch;
-    
-    //tone_t rx_tone;
-    //tone_t tx_tone;
-    
-    //ch_t *channel;
-    
-//#ifdef DMR_ENABLED
-    //uint8_t dmr_color;
-    //uint8_t dmr_timeslot;
-    //dmr_contact_t *dmr_contact;
-//#endif
-} state_t;
-
-/**
- * This function initialises the Radio state, acquiring the information
- * needed to populate it from device drivers. 
- */
-void state_init();
-
-/**
- * This function updates the state information by sourcing the
- * updated values of the various fields of the state_t struct
- * from corresponding device drivers.
- */
-state_t state_update();
-
-/**
- * This function terminates the Radio state.
- */
-void state_terminate();
-
-#endif /* STATE_H */
+#endif /* DATATYPES_H */

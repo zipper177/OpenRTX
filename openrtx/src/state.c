@@ -34,6 +34,10 @@ state_t current_state;
 
 void state_init()
 {
+    /*TODO: Read current state parameters from hardware, 
+     * or initialize them to sane defaults */
+     current_state.rx_freq = 0.0;
+     current_state.tx_freq = 0.0;
 }
 
 state_t state_update()
