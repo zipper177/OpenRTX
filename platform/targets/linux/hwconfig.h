@@ -26,6 +26,8 @@
  ***************************************************************************/
 
 
+#define PLATFORM_LINUX
+
 #define GPIOA "PA"
 #define GPIOB "PB"
 #define GPIOC "PC"
