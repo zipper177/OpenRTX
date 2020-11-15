@@ -1,7 +1,6 @@
 /***************************************************************************
  *   Copyright (C) 2020 by Federico Amedeo Izzo IU2NUO,                    *
- *                         Niccolò Izzo IU2KIN                             *
- *                         Frederik Saraci IU2NRO                          *
+ *                         Niccolò Izzo IU2KIN,                            *
  *                         Silvano Seva IU2KWO                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -28,18 +27,29 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>   *
  ***************************************************************************/
 
-#include <stdlib.h>
-#include "threads.h"
-#include "platform.h"
+#ifndef UI_H
+#define UI_H
 
-int main(void)
-{
-    // Initialize platform drivers
-    platform_init();
+#include <stdbool.h>
+#include <state.h>
+#include <stdint.h>
 
-    // Create OpenRTX threads
-    create_threads();
+/**
+ * This function initialises the User Interface, starting the 
+ * Finite State Machine describing the user interaction.
+ */
+void ui_init();
 
-    while(1) ;
-    return 0;
-}
+/**
+ * This function advances the User Interface FSM, basing on the 
+ * current radio state and the keys pressed.
+ * @return true if a screen refresh is needed after the update
+ */
+bool ui_update(state_t state, uint32_t keys);
+
+/**
+ * This function terminates the User Interface.
+ */
+void ui_terminate();
+
+#endif /* UI_H */

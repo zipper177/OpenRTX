@@ -40,11 +40,12 @@ void state_init()
      current_state.tx_freq = 0.0;
 }
 
-void state_main()
+void state_update()
 {
+    
 }
 
-state_t state_update()
+state_t state_getCurrentState()
 {
     return current_state;
 }

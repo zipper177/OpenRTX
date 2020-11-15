@@ -27,34 +27,69 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>   *
  ***************************************************************************/
 
-#ifndef UI_H
-#define UI_H
+#ifndef STATE_H
+#define STATE_H
 
-#include <stdbool.h>
-#include <state.h>
-#include <stdint.h>
+#include <datatypes.h>
 
 /**
- * This function initialises the User Interface, starting the 
- * Finite State Machine describing the user interaction.
+ * Part of this structure has been commented because the corresponding
+ * functionality is not yet implemented.
+ * Uncomment once the related feature is ready
  */
-void ui_init();
+
+typedef struct state_t {
+    //enum ui_screen;
+    //enum tuner_mode;
+    //enum radio_mode;
+    
+    //time_t rx_status_tv;
+    //bool rx_status;
+    
+    //time_t tx_status_tv;
+    //bool tx_status;
+    
+    freq_t rx_freq;
+    freq_t tx_freq;
+    
+    //float tx_power;
+    
+    //uint8_t squelch;
+    
+    //tone_t rx_tone;
+    //tone_t tx_tone;
+    
+    //ch_t *channel;
+    
+//#ifdef DMR_ENABLED
+    //uint8_t dmr_color;
+    //uint8_t dmr_timeslot;
+    //dmr_contact_t *dmr_contact;
+//#endif
+} state_t;
 
 /**
- * This function is the entry point of the UI thread 
+ * This function initialises the Radio state, acquiring the information
+ * needed to populate it from device drivers. 
  */
-void ui_main();
+void state_init();
 
 /**
- * This function advances the User Interface FSM, basing on the 
- * current radio state and the keys pressed.
- * @return true if a screen refresh is needed after the update
+ * This function updates the state information by sourcing the
+ * updated values of the various fields of the state_t struct
+ * from corresponding device drivers.
  */
-bool ui_update(state_t state, uint32_t keys);
+void state_update();
 
 /**
- * This function terminates the User Interface.
+ * Fetch current state.
+ * @return current state.
  */
-void ui_terminate();
+state_t state_getCurrentState();
 
-#endif /* UI_H */
+/**
+ * This function terminates the Radio state.
+ */
+void state_terminate();
+
+#endif /* STATE_H */
