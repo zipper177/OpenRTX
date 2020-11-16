@@ -62,6 +62,8 @@ void platform_init()
      * Backlight pin is connected to TIM8 CR1.
      */
     RCC->APB2ENR |= RCC_APB2ENR_TIM8EN;
+    __DSB();
+
     TIM8->ARR = 255;
     TIM8->PSC = 327;
     TIM8->CNT = 0;
@@ -88,6 +90,7 @@ void platform_terminate()
 
     /* Shut down timer */
     RCC->APB2ENR &= ~RCC_APB2ENR_TIM8EN;
+    __DSB();
 
     /* Shut down ADC */
     adc1_terminate();
