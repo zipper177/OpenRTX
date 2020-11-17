@@ -1,5 +1,8 @@
 /***************************************************************************
- *   Copyright (C) 2020 by Frederik Saraci IU2NRO                          *
+ *   Copyright (C) 2020 by Federico Amedeo Izzo IU2NUO,                    *
+ *                         Niccolò Izzo IU2KIN                             *
+ *                         Frederik Saraci IU2NRO                          *
+ *                         Silvano Seva IU2KWO                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -25,84 +28,42 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>   *
  ***************************************************************************/
 
-#include "platform.h"
-#include "gpio.h"
-#include <stdio.h>
-#include "emulator.h"
+#include <stdbool.h>
+#include <stdint.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 
-void platform_init()
-{
-	//printf("Platform init\n");
-}
+#ifndef SCREEN_WIDTH
+#define SCREEN_WIDTH 160
+#endif
 
-void platform_terminate()
-{
-	printf("Platform terminate\n");
-}
-
-void platform_setBacklightLevel(uint8_t level)
-{
-	//printf("platform_setBacklightLevel(%u)\n", level);
-}
-
-// Simulate a fully charged lithium battery
-float platform_getVbat(){
-	return Radio_State.Vbat;
-}
+#ifndef SCREEN_HEIGHT
+#define SCREEN_HEIGHT 128
+#endif
 
 
-float platform_getMicLevel(){
-	return Radio_State.micLevel;
-}
+SDL_Renderer *renderer;      /* SDL renderer           */
+SDL_Window *window;          /* SDL window             */
+SDL_Texture *displayTexture; /* SDL rendering surface  */
 
+enum choices {
+    VAL_RSSI=1,
+    VAL_BAT,
+    VAL_MIC,
+    VAL_VOL,
+    VAL_CH,
+    VAL_PTT,
+    PRINT_STATE,
+    EXIT
+};
 
-float platform_getVolumeLevel(){
-	return Radio_State.volumeLevel;
-}
+typedef struct {
+    float RSSI;
+    float Vbat;
+    float micLevel;
+    float volumeLevel;
+    float chSelector;
+    bool PttStatus;
+} radio_state;
 
-
-uint8_t platform_getChSelector(){
-	return Radio_State.chSelector;
-}
-
-
-bool platform_getPttStatus(){
-    return Radio_State.PttStatus;
-}
-
-
-void platform_ledOn(led_t led){
-	char* str;
-
-	switch(led){
-		case 0:
-			str = "GREEN";
-			break;
-		case 1:
-			str = "RED";
-			break;
-		case 2:
-			str = "YELLOW";
-			break;
-		case 3:
-			str = "WHITE";
-			break;
-	}
-
-	printf("platform_ledOn(%s)\n", str);
-}
-
-
-void platform_ledOff(led_t led){
-	printf("platform_ledOff()\n");
-}
-
-
-void platform_beepStart(uint16_t freq){
-	printf("platform_beepStart(%u)\n", freq);
-}
-
-
-void platform_beepStop(){
-	printf("platform_beepStop()\n");
-}
+radio_state Radio_State;
