@@ -35,7 +35,6 @@
 #include "gpio.h"
 #include "delays.h"
 #include "rtx.h"
-#include "ADC1_MDxx380.h"
 #include "platform.h"
 #include "hwconfig.h"
 #include "HR-C5000_MD3x0.h"
@@ -57,19 +56,22 @@ int main(void)
 
     rtx_init();
     rtx_setTxFreq(430100000.0f);
+    rtx_setRxFreq(430100000.0f);
     rtx_setBandwidth(BW_25);
     rtx_setOpmode(FM);
-    rtx_setFuncmode(OFF);
+    rtx_setFuncmode(RX);
 
     gpio_setMode(GPIOA, 14, OUTPUT); /* Micpwr_sw */
     gpio_setPin(GPIOA, 14);
 
     bool txActive = false;
+    uint8_t count = 0;
 
     while (1)
     {
         if(platform_getPttStatus() && (txActive == false))
         {
+            rtx_setFuncmode(OFF);
             rtx_setFuncmode(TX);
             C5000_startAnalogTx();
             platform_ledOn(RED);
@@ -81,7 +83,15 @@ int main(void)
             rtx_setFuncmode(OFF);
             C5000_stopAnalogTx();
             platform_ledOff(RED);
+            rtx_setFuncmode(RX);
             txActive = false;
+        }
+
+        count++;
+        if(count == 50)
+        {
+            printf("RSSI: %f\r\n", rtx_getRssi());
+            count = 0;
         }
 
         OS_ERR err;
