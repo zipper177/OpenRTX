@@ -31,7 +31,7 @@
 #include <gpio.h>
 #include <os.h>
 #include "hwconfig.h"
-#include "ADC1_MDxx380.h"
+#include "ADC1_MDx.h"
 
 #ifdef ENABLE_BKLIGHT_DIMMING
 void TIM1_TRG_COM_TIM11_IRQHandler()
