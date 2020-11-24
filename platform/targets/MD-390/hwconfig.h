@@ -32,8 +32,6 @@
 
 #include <stm32f4xx.h>
 
-#define PLATFORM_MD390
-
 /* Screen dimensions */
 #define SCREEN_WIDTH 160
 #define SCREEN_HEIGHT 128
