@@ -37,27 +37,31 @@
 #include <platform.h>
 #include <hwconfig.h>
 
-// Allocate state mutex
+#include <stdio.h>
+
+/* Mutex for concurrent access to state variable */
 static OS_MUTEX state_mutex;
 
-// Allocate UI task control block and stack
+/* UI task control block and stack */
 static OS_TCB  ui_tcb;
 static CPU_STK ui_stk[UI_TASK_STKSIZE];
 
-// Allocate state task control block and stack
+/* State task control block and stack */
 static OS_TCB  state_tcb;
 static CPU_STK state_stk[STATE_TASK_STKSIZE];
 
-// Allocate baseband task control block and stack
+/* Baseband task control block and stack */
 static OS_TCB  rtx_tcb;
 static CPU_STK rtx_stk[RTX_TASK_STKSIZE];
 
-// Allocate DMR task control block and stack
+/* DMR task control block and stack */
 static OS_TCB  dmr_tcb;
 static CPU_STK dmr_stk[DMR_TASK_STKSIZE];
 
 
-// UI update task
+/**
+ * \internal Task function in charge of updating the UI.
+ */
 static void ui_task(void *arg)
 {
     (void) arg;
@@ -71,20 +75,20 @@ static void ui_task(void *arg)
     ui_init();
 
     // Display splash screen
-    ui_drawSplashScreen2();
+    ui_drawSplashScreen();
     gfx_render();
     while(gfx_renderingInProgress());
-    // Wait 30ms to hide random pixels on screen
+
+    // Wait 30ms before turning on backlight to hide random pixels on screen
     OSTimeDlyHMSM(0u, 0u, 0u, 30u, OS_OPT_TIME_HMSM_STRICT, &os_err);
     platform_setBacklightLevel(255);
+
     // Keep the splash screen for 1 second
     OSTimeDlyHMSM(0u, 0u, 1u, 0u, OS_OPT_TIME_HMSM_STRICT, &os_err);
 
     // Get initial state local copy
-    // Wait for unlocked mutex and lock it
     OSMutexPend(&state_mutex, 0u, OS_OPT_PEND_BLOCKING, 0u, &os_err);
     state_t last_state = state;
-    // Unlock the mutex
     OSMutexPost(&state_mutex, OS_OPT_POST_NONE, &os_err);
 
     uint32_t last_keys = 0;
@@ -94,17 +98,18 @@ static void ui_task(void *arg)
         uint32_t keys = kbd_getKeys();
         if(keys != last_keys)
         {
-            printf("Keys changed!\n");
             last_keys = keys;
         }
-        // Wait for unlocked mutex and lock it
+
         OSMutexPend(&state_mutex, 0u, OS_OPT_PEND_BLOCKING, 0u, &os_err); 
+
         // React to keypresses and update FSM inside state
         ui_updateFSM(last_state, keys);
         // Update state local copy
         last_state = state;
-        // Unlock the mutex
+
         OSMutexPost(&state_mutex, OS_OPT_POST_NONE, &os_err);
+
         // Redraw GUI
         bool renderNeeded = ui_updateGUI(last_state);
 
@@ -119,7 +124,9 @@ static void ui_task(void *arg)
     }
 }
 
-// State update task
+/**
+ * \internal Task function in charge of updating the radio state.
+ */
 static void state_task(void *arg)
 {
     (void) arg;
@@ -127,21 +134,21 @@ static void state_task(void *arg)
 
     while(1)
     {
-        // Wait for unlocked mutex and lock it
         OSMutexPend(&state_mutex, 0u, OS_OPT_PEND_BLOCKING, 0u, &os_err);
 
         state.time = rtc_getTime(); 
         state.v_bat = platform_getVbat();
-        
-	    // Unlock the mutex
+
         OSMutexPost(&state_mutex, OS_OPT_POST_NONE, &os_err);
-        
+
         // Execute state update thread every 1s
         OSTimeDlyHMSM(0u, 0u, 1u, 0u, OS_OPT_TIME_HMSM_STRICT, &os_err);
     }
 }
 
-// RTX task
+/**
+ * \internal Task function for RTX management.
+ */
 static void rtx_task(void *arg)
 {
     (void) arg;
@@ -156,8 +163,9 @@ static void rtx_task(void *arg)
     }
 }
 
-
-// DMR task
+/**
+ * \internal Task function for DMR management.
+ */
 static void dmr_task(void *arg)
 {
     (void) arg;
@@ -172,6 +180,9 @@ static void dmr_task(void *arg)
     }
 }
 
+/**
+ * \internal This function creates all the system tasks and mutexes.
+ */
 void create_threads()
 {
     OS_ERR os_err;
