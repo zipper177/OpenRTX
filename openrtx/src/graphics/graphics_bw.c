@@ -37,6 +37,7 @@
 #include <stdio.h>
 #include "display.h"
 #include "graphics.h"
+#include "hwconfig.h"
 
 typedef enum
 {
