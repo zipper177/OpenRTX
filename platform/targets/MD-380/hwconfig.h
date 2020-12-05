@@ -127,5 +127,6 @@
 #define AMP_EN   GPIOB,9
 #define SPK_MUTE GPIOB,8
 #define FM_MUTE  GPIOE,13
+#define MIC_PWR  GPIOA,14
 
 #endif
