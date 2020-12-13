@@ -32,6 +32,7 @@
 #define RTX_H
 
 #include <os.h>
+#include <cps.h>
 #include <stdint.h>
 #include <datatypes.h>
 
@@ -54,18 +55,18 @@ typedef struct
 }
 rtxStatus_t;
 
-enum bandwidth
-{
-    BW_12_5 = 0,    /**< 12.5kHz bandwidth */
-    BW_20   = 1,    /**< 20kHz bandwidth   */
-    BW_25   = 2     /**< 25kHz bandwidth   */
-};
-
-enum opmode
-{
-    FM  = 0,        /**< Analog FM */
-    DMR = 1         /**< DMR       */
-};
+// enum bandwidth
+// {
+//     BW_12_5 = 0,    /**< 12.5kHz bandwidth */
+//     BW_20   = 1,    /**< 20kHz bandwidth   */
+//     BW_25   = 2     /**< 25kHz bandwidth   */
+// };
+// 
+// enum opmode
+// {
+//     FM  = 0,        /**< Analog FM */
+//     DMR = 1         /**< DMR       */
+// };
 
 enum opstatus
 {
