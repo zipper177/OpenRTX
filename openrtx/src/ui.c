@@ -76,6 +76,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <ui.h>
+#include <rtx.h>
 #include <delays.h>
 #include <graphics.h>
 #include <keyboard.h>
@@ -249,15 +250,12 @@ void _ui_drawTopBar(state_t* last_state)
 
     // Print radio mode on top bar
     char mode[4] = "";
-    switch(last_state->radio_mode)
+    switch(last_state->channel.mode)
     {
-        case MODE_FM:
+        case FM:
         strcpy(mode, "FM");
         break;
-        case MODE_NFM:
-        strcpy(mode, "NFM");
-        break;
-        case MODE_DMR:
+        case DMR:
         strcpy(mode, "DMR");
         break;
     }
@@ -388,7 +386,7 @@ bool _ui_drawLowBatteryScreen()
     return true;
 }
 
-void ui_updateFSM(event_t event)
+void ui_updateFSM(event_t event, bool *sync_rtx)
 {
     // Check if battery has enough charge to operate
     float charge = battery_getCharge(state.v_bat);
@@ -417,12 +415,14 @@ void ui_updateFSM(event_t event)
                     // Advance TX and RX frequency of 12.5KHz
                     state.channel.rx_frequency += 12500;
                     state.channel.tx_frequency += 12500;
+                    *sync_rtx = true;
                 }
                 else if(msg.keys & KEY_DOWN)
                 {
                     // Advance TX and RX frequency of 12.5KHz
                     state.channel.rx_frequency -= 12500;
                     state.channel.tx_frequency -= 12500;
+                    *sync_rtx = true;
                 }
                 else if(msg.keys & KEY_ENTER)
                     // Open Menu
