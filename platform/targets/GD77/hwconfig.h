@@ -33,10 +33,6 @@
 
 #include "MK22F51212.h"
 
-/* Signalling LEDs */
-#define GREEN_LED  GPIOB,18
-#define RED_LED    GPIOC,14
-
 /* Screen dimensions */
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
@@ -51,6 +47,10 @@
 #define LCD_RS      GPIOC,10
 #define LCD_CLK     GPIOC,11
 #define LCD_DAT     GPIOC,12
+
+/* Signalling LEDs */
+#define GREEN_LED  GPIOB,18
+#define RED_LED    GPIOC,14
 
 /* Keyboard */
 #define KB_ROW0 GPIOB,19

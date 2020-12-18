@@ -28,114 +28,55 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>   *
  ***************************************************************************/
 
-#include <platform.h>
-#include <gpio.h>
-#include "hwconfig.h"
+#include <os.h>
+#include "rtc.h"
 
-void platform_init()
+/*
+ * NOTE: even if the MK22FN512 MCU has an RTC, it is unusable in GDx platforms
+ * because they lacks of the proper hardware necessary to run the RTC also when
+ * the MCU is powered off.
+ * We thus provide a stub implementation of the RTC API to avoid cluttering the
+ * main code with #ifdefs checking wheter or not the RTC can be actually used.
+ */
+
+void rtc_init() { }
+
+void rtc_shutdown() { }
+
+void rtc_setTime(curTime_t t)
 {
-    /* Configure GPIOs */
-    gpio_setMode(GREEN_LED, OUTPUT);
-    gpio_setMode(RED_LED,   OUTPUT);
-
-    gpio_setMode(LCD_BKLIGHT, OUTPUT);
-    gpio_clearPin(LCD_BKLIGHT);
-
-    gpio_setMode(PTT_SW, INPUT);
+    (void) t;
 }
 
-void platform_terminate()
+void rtc_setHour(uint8_t hours, uint8_t minutes, uint8_t seconds)
 {
-    gpio_clearPin(LCD_BKLIGHT);
-    gpio_clearPin(RED_LED);
-    gpio_clearPin(GREEN_LED);
+    (void) hours;
+    (void) minutes;
+    (void) seconds;
 }
 
-float platform_getVbat()
+void rtc_setDate(uint8_t date, uint8_t month, uint8_t year)
 {
-    /* TODO */
-    return 0.0f;
+    (void) date;
+    (void) month;
+    (void) year;
 }
 
-float platform_getMicLevel()
+curTime_t rtc_getTime()
 {
-    /* TODO */
-    return 0.0f;
+    curTime_t t;
+
+    t.hour   = 12;
+    t.minute = 12;
+    t.second = 12;
+    t.year  = 20;
+    t.day   = 4;
+    t.month = 12;
+    t.date  = 12;
+
+    return t;
 }
 
-float platform_getVolumeLevel()
-{
-    /* TODO */
-    return 0.0f;
-}
+void rtc_dstSet() { }
 
-uint8_t platform_getChSelector()
-{
-    /* GD77 does not have a channel selector */
-    return 0;
-}
-
-bool platform_getPttStatus()
-{
-    /* PTT line has a pullup resistor with PTT switch closing to ground */
-    return (gpio_readPin(PTT_SW) == 0) ? true : false;
-}
-
-void platform_ledOn(led_t led)
-{
-    switch(led)
-    {
-        case GREEN:
-            gpio_setPin(GREEN_LED);
-            break;
-
-        case RED:
-            gpio_setPin(RED_LED);
-            break;
-
-        default:
-            break;
-    }
-}
-
-void platform_ledOff(led_t led)
-{
-    switch(led)
-    {
-        case GREEN:
-            gpio_clearPin(GREEN_LED);
-            break;
-
-        case RED:
-            gpio_clearPin(RED_LED);
-            break;
-
-        default:
-            break;
-    }
-}
-
-void platform_beepStart(uint16_t freq)
-{
-    /* TODO */
-
-    (void) freq;
-}
-
-void platform_beepStop()
-{
-    /* TODO */
-}
-
-void platform_setBacklightLevel(uint8_t level)
-{
-    /* TODO: backlight dimming */
-    if(level > 1)
-    {
-        gpio_setPin(LCD_BKLIGHT);
-    }
-    else
-    {
-        gpio_clearPin(LCD_BKLIGHT);
-    }
-}
+void rtc_dstClear() { }
