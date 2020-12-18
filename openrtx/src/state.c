@@ -54,4 +54,6 @@ void state_init()
     state.rtxStatus = RTX_OFF;
     state.sqlLevel = 0;
     state.voxLevel = 0;
+
+    state.emergency = false;
 }
