@@ -30,7 +30,7 @@
 
 #include <stdio.h>
 #include <state.h>
-#include <platform.h>
+#include <interfaces/platform.h>
 
 state_t state;
 

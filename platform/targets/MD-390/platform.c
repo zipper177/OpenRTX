@@ -27,9 +27,9 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>   *
  ***************************************************************************/
 
-#include <gpio.h>
-#include <nvmem.h>
-#include <platform.h>
+#include <interfaces/gpio.h>
+#include <interfaces/nvmem.h>
+#include <interfaces/platform.h>
 #include <hwconfig.h>
 #include <ADC1_MDx.h>
 #include <calibInfo_MDx.h>

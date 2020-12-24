@@ -32,7 +32,7 @@
 #define CPS_H
 
 #include <stdint.h>
-#include <rtx.h>
+#include <interfaces/rtx.h>
 #include <datatypes.h>
 
 /**

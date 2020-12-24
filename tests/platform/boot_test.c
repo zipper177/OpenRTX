@@ -30,7 +30,7 @@
 
 #include <os.h>
 #include <stdio.h>
-#include <platform.h>
+#include <interfaces/platform.h>
 
 int main()
 {

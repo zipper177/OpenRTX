@@ -29,7 +29,7 @@
  ***************************************************************************/
 
 #include "extFlash_MDx.h"
-#include <gpio.h>
+#include <interfaces/gpio.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>

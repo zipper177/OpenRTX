@@ -33,7 +33,7 @@
 
 #include <datatypes.h>
 #include <stdbool.h>
-#include <rtc.h>
+#include <interfaces/rtc.h>
 #include <cps.h>
 
 /**

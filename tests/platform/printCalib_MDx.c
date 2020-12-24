@@ -31,7 +31,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <sys/types.h>
-#include <nvmem.h>
+#include <interfaces/nvmem.h>
 #include <calibInfo_MDx.h>
 
 void printMD3x0calibration()
