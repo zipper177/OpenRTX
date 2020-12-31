@@ -48,7 +48,7 @@ void toneGen_init();
 /**
  * Terminate tone generator.
  */
-void toneGen_shutdown();
+void toneGen_terminate();
 
 /**
  * Set frequency for CTCSS tone generation.
