@@ -746,6 +746,7 @@ void ui_updateFSM(event_t event, bool *sync_rtx)
                             {
                                 state.channel.rx_frequency = new_rx_frequency;
                                 state.channel.tx_frequency = new_rx_frequency;
+                                *sync_rtx = true;
                             }
                         }
                         // Otherwise set both frequencies
@@ -756,6 +757,7 @@ void ui_updateFSM(event_t event, bool *sync_rtx)
                             {
                                 state.channel.rx_frequency = new_rx_frequency;
                                 state.channel.tx_frequency = new_tx_frequency;
+                                *sync_rtx = true;
                             }
                         }
                         state.ui_screen = VFO_MAIN;
@@ -812,6 +814,7 @@ void ui_updateFSM(event_t event, bool *sync_rtx)
                             {
                                 state.channel.rx_frequency = new_rx_frequency;
                                 state.channel.tx_frequency = new_tx_frequency;
+                                *sync_rtx = true;
                             }
                             state.ui_screen = VFO_MAIN;
                         }
