@@ -705,7 +705,8 @@ bool _ui_drawMenuMacro() {
 }
 
 bool _ui_drawDarkOverlay() {
-    color_t alpha_grey = {0, 0, 0, 245};
+    // TODO: Make this 245 alpha and fix alpha frame swap
+    color_t alpha_grey = {0, 0, 0, 255};
     point_t origin = {0, 0};
     gfx_drawRect(origin, SCREEN_WIDTH, SCREEN_HEIGHT, alpha_grey, true);
     return true;
@@ -757,9 +758,10 @@ void ui_updateFSM(event_t event, bool *sync_rtx)
                     }
                 }
                 else if(msg.keys & KEY_ENTER)
+                {
                     // Open Menu
                     state.ui_screen = MENU_TOP;
-<<<<<<< HEAD
+                }
                 else if(input_isNumberPressed(msg))
                 {
                     // Open Frequency input screen
@@ -774,6 +776,12 @@ void ui_updateFSM(event_t event, bool *sync_rtx)
                     // Calculate portion of the new frequency
                     new_rx_frequency = _ui_freq_add_digit(new_rx_frequency, 
                                             input_position, input_number);
+                }
+                else if(msg.keys & KEY_MONI)
+                {
+                    // Open Macro Menu
+                    _ui_drawDarkOverlay();
+                    state.ui_screen = MENU_MACRO;
                 }
                 break;
             // VFO frequency input screen
@@ -938,12 +946,18 @@ void ui_updateFSM(event_t event, bool *sync_rtx)
                     // Reset menu selection
                     menu_selected = 0;
                 }
+                else if(msg.keys & KEY_MONI)
+                {
+                    // Open Macro Menu
+                    _ui_drawDarkOverlay();
+                    state.ui_screen = MENU_MACRO;
+                }
                 break;
             // Macro menu
             case MENU_MACRO:
                 // Exit from this menu when monitor key is released
                 if(!(msg.keys & KEY_MONI))
-                    state.ui_screen = MAIN_VFO;
+                    state.ui_screen = VFO_MAIN;
                 break;
             // Settings menu screen
             case MENU_SETTINGS:
@@ -1051,7 +1065,7 @@ void ui_updateGUI(state_t last_state)
             break;
         // Macro menu
         case MENU_MACRO:
-            screen_update = _ui_drawMenuMacro();
+            _ui_drawMenuMacro();
             break;
         // Settings menu screen
         case MENU_SETTINGS:
