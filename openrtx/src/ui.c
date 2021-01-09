@@ -361,12 +361,12 @@ void _ui_drawVFOMiddle(state_t* last_state)
 {
     // Print VFO frequencies
     char freq_buf[20] = "";
-    snprintf(freq_buf, sizeof(freq_buf), " Rx:%03lu.%05lu",
+    snprintf(freq_buf, sizeof(freq_buf), " Rx:%03u.%05u",
              last_state->channel.rx_frequency/1000000,
              last_state->channel.rx_frequency%1000000/10);
     gfx_print(layout.line2_left, freq_buf, layout.line2_font, TEXT_ALIGN_CENTER,
               color_white);
-    snprintf(freq_buf, sizeof(freq_buf), " Tx:%03lu.%05lu",
+    snprintf(freq_buf, sizeof(freq_buf), " Tx:%03u.%05u",
              last_state->channel.tx_frequency/1000000,
              last_state->channel.tx_frequency%1000000/10);
     gfx_print(layout.line3_left, freq_buf, layout.line3_font, TEXT_ALIGN_CENTER,
@@ -385,7 +385,7 @@ void _ui_drawVFOMiddleInput(state_t* last_state, ui_state_t* ui_state)
     {
         if(ui_state->input_position == 0)
         {
-            snprintf(freq_buf, sizeof(freq_buf), ">Rx:%03lu.%05lu",
+            snprintf(freq_buf, sizeof(freq_buf), ">Rx:%03u.%05u",
                      ui_state->new_rx_frequency/1000000,
                      ui_state->new_rx_frequency%1000000/10);
             gfx_print(layout.line2_left, freq_buf, layout.line2_font, TEXT_ALIGN_CENTER,
@@ -400,7 +400,7 @@ void _ui_drawVFOMiddleInput(state_t* last_state, ui_state_t* ui_state)
             gfx_print(layout.line2_left, ui_state->new_rx_freq_buf, layout.line2_font, TEXT_ALIGN_CENTER,
                       color_white);
         }
-        snprintf(freq_buf, sizeof(freq_buf), " Tx:%03lu.%05lu",
+        snprintf(freq_buf, sizeof(freq_buf), " Tx:%03u.%05u",
                  last_state->channel.tx_frequency/1000000,
                  last_state->channel.tx_frequency%1000000/10);
         gfx_print(layout.line3_left, freq_buf, layout.line3_font, TEXT_ALIGN_CENTER,
@@ -408,7 +408,7 @@ void _ui_drawVFOMiddleInput(state_t* last_state, ui_state_t* ui_state)
     }
     else if(ui_state->input_set == SET_TX)
     {
-        snprintf(freq_buf, sizeof(freq_buf), " Rx:%03lu.%05lu",
+        snprintf(freq_buf, sizeof(freq_buf), " Rx:%03u.%05u",
                  ui_state->new_rx_frequency/1000000,
                  ui_state->new_rx_frequency%1000000/10);
         gfx_print(layout.line2_left, freq_buf, layout.line2_font, TEXT_ALIGN_CENTER,
@@ -416,7 +416,7 @@ void _ui_drawVFOMiddleInput(state_t* last_state, ui_state_t* ui_state)
         // Replace Rx frequency with underscorses
         if(ui_state->input_position == 0)
         {
-            snprintf(freq_buf, sizeof(freq_buf), ">Tx:%03lu.%05lu",
+            snprintf(freq_buf, sizeof(freq_buf), ">Tx:%03u.%05u",
                      ui_state->new_rx_frequency/1000000,
                      ui_state->new_rx_frequency%1000000/10);
             gfx_print(layout.line3_left, freq_buf, layout.line3_font, TEXT_ALIGN_CENTER,
