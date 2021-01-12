@@ -30,6 +30,7 @@
 
 #include <stdio.h>
 #include <state.h>
+#include <battery.h>
 #include <interfaces/platform.h>
 
 state_t state;
@@ -45,6 +46,7 @@ void state_init()
     state.time = rtc_getTime();
 #endif
     state.v_bat = platform_getVbat();
+    state.charge = battery_getCharge(state.v_bat);
 
     state.backlight_level = 255;
     state.channelInfoUpdated = true;
