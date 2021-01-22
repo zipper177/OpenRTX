@@ -1,7 +1,7 @@
 /***************************************************************************
  *   Copyright (C) 2020 by Federico Amedeo Izzo IU2NUO,                    *
- *                         Niccolò Izzo IU2KIN                             *
- *                         Frederik Saraci IU2NRO                          *
+ *                         Niccolò Izzo IU2KIN,                            *
+ *                         Frederik Saraci IU2NRO,                         *
  *                         Silvano Seva IU2KWO                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -28,50 +28,48 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>   *
  ***************************************************************************/
 
-#ifndef NVMEM_H
-#define NVMEM_H
-
+#include <stdio.h>
 #include <stdint.h>
+#include <sys/types.h>
+#include <interfaces/nvmem.h>
 #include <cps.h>
 
-/**
- * Interface for nonvolatile memory management, usually an external SPI flash
- * memory, containing calibration, contact data and so on.
- */
+int main()
+{
+    nvm_init();
 
-/**
- * Initialise NVM driver.
- */
-void nvm_init();
-
-/**
- * Terminate NVM driver.
- */
-void nvm_terminate();
-
-/**
- * Load calibration data from nonvolatile memory.
- *
- * @param buf: destination buffer for calibration data.
- */
-void nvm_readCalibData(void *buf);
-
-/**
- * Read one channel entry from table stored in nonvolatile memory.
- *
- * @param channel: pointer to the channel_t data structure to be populated.
- * @param pos: position, inside the channel table, from which read data.
- * @return 0 on success, -1 on failure
- */
-int nvm_readChannelData(channel_t *channel, uint16_t pos);
-
-/**
- * Read one zone from table stored in nonvolatile memory.
- *
- * @param zone: pointer to the zone_t data structure to be populated.
- * @param pos: position, inside the zone table, from which read data.
- * @return 0 on success, -1 on failure
- */
-int nvm_readZoneData(zone_t *zone, uint16_t pos);
-
-#endif /* NVMEM_H */
+    getchar();
+    printf("Codeplug Demo!\r\n\r\n");
+    printf("Contacts:\r\n");
+    for(uint16_t pos=0,result=0; result != -1 && pos < 20; pos++)
+    {
+        channel_t ch;
+        result = nvm_readChannelData(&ch, pos);
+        printf("Contact n.%d:\r\n", pos+1);
+        printf("  %s\r\n  TX: %ld\r\n  RX: %ld\r\n  Mode: %s\r\n  Bandwidth: %s\r\n",
+               ch.name,
+               ch.tx_frequency,
+               ch.rx_frequency,
+               (ch.mode == 1) ? "DMR" : "FM",
+               (ch.bandwidth == BW_12_5) ? "12.5kHz" : ((ch.bandwidth == BW_20)
+                                                          ? "20kHz" : "25kHz"));
+        puts("\r");
+    }
+    printf("Zones:\r\n");
+    for(uint16_t pos=0,result=0; result != -1 && pos < 5; pos++)
+    {
+        zone_t zone;
+        result = nvm_readZoneData(&zone, pos);
+        printf("Zone n.%d:\r\n", pos+1);
+        printf("  %s\r\n", zone.name);
+        for(int x=0; x < 64; x++)
+        {
+            if(zone.member[x] != 0)
+            {
+                printf("  - Channel %d\r\n", zone.member[x]);
+            }
+        }
+        puts("\r");
+    }
+    return 0;
+}
