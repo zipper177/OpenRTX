@@ -31,6 +31,7 @@
 #include <stdio.h>
 #include <state.h>
 #include <battery.h>
+#include <hwconfig.h>
 #include <interfaces/platform.h>
 
 state_t state;
@@ -62,7 +63,11 @@ void state_init()
     state.channel.fm.txTone = 2; // 71.9Hz
 
     state.rtxStatus = RTX_OFF;
+#ifdef HAS_ABSOLUTE_KNOB // If the radio has an absolute position knob
+    state.sqlLevel = platform_getChSelector() - 1;
+#else
     state.sqlLevel = 3;
+#endif
     state.voxLevel = 0;
 
     state.emergency = false;
