@@ -139,5 +139,5 @@ void rtx_taskFunc()
 
 float rtx_getRssi()
 {
-    return 0.0;
+    return -140.0;
 }
