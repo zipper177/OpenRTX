@@ -59,7 +59,7 @@ typedef struct
 rtxStatus_t;
 
 /**
- * \enum bandwidth Enumeration type defining the bandwidth of the channel.
+ * \enum bandwidth Enumeration type defining the current rtx bandwidth.
  */
 enum bandwidth
 {
@@ -69,8 +69,7 @@ enum bandwidth
 };
 
 /**
- * \enum opmode Enumeration type defining the operating mode associated to each
- * channel.
+ * \enum opmode Enumeration type defining the current rtx operating mode.
  */
 enum opmode
 {
@@ -78,6 +77,9 @@ enum opmode
     DMR = 1         /**< DMR       */
 };
 
+/**
+ * \enum opstatus Enumeration type defining the current rtx operating status.
+ */
 enum opstatus
 {
     OFF = 0,        /**< OFF          */

@@ -74,7 +74,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <ui.h>
-#include <interfaces/rtx.h>
+#include <rtx.h>
 #include <interfaces/platform.h>
 #include <interfaces/nvmem.h>
 #include <string.h>
@@ -507,7 +507,7 @@ void _ui_fsm_confirmVFOInput(bool *sync_rtx) {
         // Otherwise set both frequencies
         else
         {
-            if(_ui_freq_check_limits(ui_state.new_rx_frequency) && 
+            if(_ui_freq_check_limits(ui_state.new_rx_frequency) &&
                _ui_freq_check_limits(ui_state.new_tx_frequency))
             {
                 state.channel.rx_frequency = ui_state.new_rx_frequency;
@@ -529,7 +529,7 @@ void _ui_fsm_insertVFONumber(kbd_msg_t msg, bool *sync_rtx) {
         if(ui_state.input_position == 1)
             ui_state.new_rx_frequency = 0;
         // Calculate portion of the new RX frequency
-        ui_state.new_rx_frequency = _ui_freq_add_digit(ui_state.new_rx_frequency, 
+        ui_state.new_rx_frequency = _ui_freq_add_digit(ui_state.new_rx_frequency,
                                 ui_state.input_position, ui_state.input_number);
         if(ui_state.input_position >= FREQ_DIGITS)
         {
@@ -546,12 +546,12 @@ void _ui_fsm_insertVFONumber(kbd_msg_t msg, bool *sync_rtx) {
         if(ui_state.input_position == 1)
             ui_state.new_tx_frequency = 0;
         // Calculate portion of the new TX frequency
-        ui_state.new_tx_frequency = _ui_freq_add_digit(ui_state.new_tx_frequency, 
+        ui_state.new_tx_frequency = _ui_freq_add_digit(ui_state.new_tx_frequency,
                                 ui_state.input_position, ui_state.input_number);
         if(ui_state.input_position >= FREQ_DIGITS)
         {
             // Save both inserted frequencies
-            if(_ui_freq_check_limits(ui_state.new_rx_frequency) && 
+            if(_ui_freq_check_limits(ui_state.new_rx_frequency) &&
                _ui_freq_check_limits(ui_state.new_tx_frequency))
             {
                 state.channel.rx_frequency = ui_state.new_rx_frequency;
@@ -738,7 +738,7 @@ void ui_updateFSM(event_t event, bool *sync_rtx)
                     // Save pressed number to calculare frequency and show in GUI
                     ui_state.input_number = input_getPressedNumber(msg);
                     // Calculate portion of the new frequency
-                    ui_state.new_rx_frequency = _ui_freq_add_digit(ui_state.new_rx_frequency, 
+                    ui_state.new_rx_frequency = _ui_freq_add_digit(ui_state.new_rx_frequency,
                                             ui_state.input_position, ui_state.input_number);
                 }
                 break;
