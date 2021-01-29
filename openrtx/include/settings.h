@@ -28,70 +28,14 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>   *
  ***************************************************************************/
 
-#ifndef STATE_H
-#define STATE_H
+#ifndef SETTINGS_H
+#define SETTINGS_H
 
-#include <datatypes.h>
-#include <stdbool.h>
-#include <interfaces/rtc.h>
-#include <cps.h>
-
-/**
- * Part of this structure has been commented because the corresponding
- * functionality is not yet implemented.
- * Uncomment once the related feature is ready
- */
 typedef struct
 {
-    bool radioStateUpdated;
-    curTime_t time;
-    float v_bat;
-    float charge;
-    float rssi;
-
-    uint8_t ui_screen;
-    uint8_t tuner_mode;
-    
-    //time_t rx_status_tv;
-    //bool rx_status;
-    
-    //time_t tx_status_tv;
-    //bool tx_status;
-
-    bool channelInfoUpdated;
-    uint16_t channel_index;
-    channel_t channel;
-    channel_t vfo_channel;
-    uint8_t rtxStatus;
-    // Squelch steps from 0 to 15
-    uint8_t sqlLevel;
-    uint8_t voxLevel;
-
-    bool emergency;
+    uint8_t brightness;
+    uint8_t contrast;
 }
-state_t;
+settings_t;
 
-enum TunerMode
-{
-    VFO = 0,
-    CH,
-    SCAN,
-    CHSCAN
-};
-
-enum RtxStatus
-{
-    RTX_OFF = 0,
-    RTX_RX,
-    RTX_TX
-};
-
-extern state_t state;
-
-/**
- * This function initializes the Radio state, acquiring the information
- * needed to populate it from device drivers.
- */
-void state_init();
-
-#endif /* STATE_H */
+#endif /* SETTINGS_H */

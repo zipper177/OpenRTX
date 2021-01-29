@@ -50,7 +50,6 @@ void state_init()
     state.charge = battery_getCharge(state.v_bat);
     state.rssi = rtx_getRssi();
 
-    state.backlight_level = 255;
     state.channelInfoUpdated = true;
     state.channel.mode = FM;
     state.channel.bandwidth = BW_25;
