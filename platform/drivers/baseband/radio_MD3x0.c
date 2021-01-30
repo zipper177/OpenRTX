@@ -39,7 +39,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "HR-C5000_MD3x0.h"
-#include "pll_MD3x0.h"
+#include "SKY72310.h"
 
 static const freq_t IF_FREQ = 49950000;  /* Intermediate frequency: 49.95MHz   */
 
@@ -105,7 +105,7 @@ void radio_init()
      * Enable and configure PLL
      */
     gpio_setPin(PLL_PWR);
-    pll_init();
+    SKY73210_init();
 
     /*
      * Configure HR_C5000
@@ -121,7 +121,7 @@ void radio_init()
 
 void radio_terminate()
 {
-    pll_terminate();
+    SKY73210_terminate();
 
     gpio_clearPin(PLL_PWR);    /* PLL off                                           */
     gpio_clearPin(DMR_SW);     /* Disconnect HR_C5000 input IF signal and audio out */
@@ -190,7 +190,7 @@ void radio_setVcoFrequency(const freq_t frequency, const bool isTransmitting)
         freq = freq - IF_FREQ;
     }
 
-    pll_setFrequency(freq, 5);
+    SKY73210_setFrequency(freq, 5);
 }
 
 void radio_setCSS(const tone_t rxCss, const tone_t txCss)
