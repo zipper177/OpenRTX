@@ -102,6 +102,7 @@ extern void _ui_drawMenuZone(ui_state_t* ui_state);
 extern void _ui_drawMenuChannel(ui_state_t* ui_state);
 extern void _ui_drawMenuContacts(ui_state_t* ui_state);
 extern void _ui_drawMenuSettings(ui_state_t* ui_state);
+extern void _ui_drawMenuInfo(ui_state_t* ui_state);
 #ifdef HAS_RTC
 extern void _ui_drawSettingsTimeDate(state_t* last_state);
 extern void _ui_drawSettingsTimeDateSet(state_t* last_state, ui_state_t* ui_state);
@@ -109,14 +110,15 @@ extern void _ui_drawSettingsTimeDateSet(state_t* last_state, ui_state_t* ui_stat
 extern void _ui_drawSettingsDisplay(ui_state_t* ui_state);
 extern bool _ui_drawMacroMenu(state_t* last_state);
 
-const char *menu_items[6] =
+const char *menu_items[7] =
 {
     "Zone",
     "Channels",
     "Contacts",
     "Messages",
     "GPS",
-    "Settings"
+    "Settings",
+    "Info"
 };
 
 #ifdef HAS_RTC
@@ -144,6 +146,13 @@ const char *display_items[1] =
     "Brightness",
 };
 #endif
+const char *info_items[4] =
+{
+    "Model",
+    "Bat. Voltage",
+    "Bat. Charge",
+    "RSSI",
+};
 
 // Calculate number of main menu entries
 const uint8_t menu_num = sizeof(menu_items)/sizeof(menu_items[0]);
@@ -151,6 +160,8 @@ const uint8_t menu_num = sizeof(menu_items)/sizeof(menu_items[0]);
 const uint8_t settings_num = sizeof(settings_items)/sizeof(settings_items[0]);
 // Calculate number of display settings menu entries
 const uint8_t display_num = sizeof(display_items)/sizeof(display_items[0]);
+// Calculate number of info menu entries
+const uint8_t info_num = sizeof(info_items)/sizeof(info_items[0]);
 
 const color_t color_black = {0, 0, 0, 255};
 const color_t color_grey = {60, 60, 60, 255};
@@ -787,6 +798,9 @@ void ui_updateFSM(event_t event, bool *sync_rtx)
                         case 5:
                             state.ui_screen = MENU_SETTINGS;
                             break;
+                        case 6:
+                            state.ui_screen = MENU_INFO;
+                            break;
                         default:
                             state.ui_screen = MENU_TOP;
                     }
@@ -907,6 +921,30 @@ void ui_updateFSM(event_t event, bool *sync_rtx)
                     }
                     // Reset menu selection
                     ui_state.menu_selected = 0;
+                }
+                else if(msg.keys & KEY_ESC)
+                {
+                    // Return to top menu
+                    state.ui_screen = MENU_TOP;
+                    // Reset menu selection
+                    ui_state.menu_selected = 0;
+                }
+                break;
+            // Info menu screen
+            case MENU_INFO:
+                if(msg.keys & KEY_UP)
+                {
+                    if(ui_state.menu_selected > 0)
+                        ui_state.menu_selected -= 1;
+                    else
+                        ui_state.menu_selected = info_num-1;
+                }
+                else if(msg.keys & KEY_DOWN)
+                {
+                    if(ui_state.menu_selected < info_num-1)
+                        ui_state.menu_selected += 1;
+                    else
+                        ui_state.menu_selected = 0;
                 }
                 else if(msg.keys & KEY_ESC)
                 {
@@ -1056,6 +1094,10 @@ void ui_updateGUI(state_t last_state)
         // Settings menu screen
         case MENU_SETTINGS:
             _ui_drawMenuSettings(&ui_state);
+            break;
+        // Info menu screen
+        case MENU_INFO:
+            _ui_drawMenuInfo(&ui_state);
             break;
 #ifdef HAS_RTC
         // Time&Date settings screen
