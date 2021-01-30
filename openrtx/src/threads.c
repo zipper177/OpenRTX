@@ -95,7 +95,6 @@ static void ui_task(void *arg)
 
     // Get initial state local copy
     OSMutexPend(&state_mutex, 0u, OS_OPT_PEND_BLOCKING, 0u, &os_err);
-    state_t last_state = state;
     OSMutexPost(&state_mutex, OS_OPT_POST_NONE, &os_err);
 
     // Initial GUI draw
@@ -115,7 +114,7 @@ static void ui_task(void *arg)
         // React to keypresses and update FSM inside state
         ui_updateFSM(event, &sync_rtx);
         // Update state local copy
-        last_state = state;
+        ui_saveState();
         // Unlock mutex
         OSMutexPost(&state_mutex, OS_OPT_POST_NONE, &os_err);
 
@@ -140,7 +139,7 @@ static void ui_task(void *arg)
         }
 
         // Redraw GUI based on last state copy
-        ui_updateGUI(last_state);
+        ui_updateGUI();
         // Lock display mutex and render display
         OSMutexPend(&display_mutex, 0u, OS_OPT_PEND_BLOCKING, 0u, &os_err);
         gfx_render();
