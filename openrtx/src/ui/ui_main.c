@@ -48,7 +48,7 @@ void _ui_drawMainTop()
     char clock_buf[9] = "";
     snprintf(clock_buf, sizeof(clock_buf), "%02d:%02d:%02d", last_state.time.hour,
              last_state.time.minute, last_state.time.second);
-    gfx_print(layout.top_left, clock_buf, layout.top_font, TEXT_ALIGN_CENTER,
+    gfx_print(layout.top_pos, clock_buf, layout.top_font, TEXT_ALIGN_CENTER,
               color_white);
 #endif
 
@@ -70,7 +70,7 @@ void _ui_drawMainTop()
         strcpy(mode, "DMR");
         break;
     }
-    gfx_print(layout.top_left, mode, layout.top_font, TEXT_ALIGN_LEFT,
+    gfx_print(layout.top_pos, mode, layout.top_font, TEXT_ALIGN_LEFT,
               color_white);
 }
 
@@ -81,31 +81,31 @@ void _ui_drawVFOMiddle()
     snprintf(freq_buf, sizeof(freq_buf), " Rx:%03lu.%05lu",
              (unsigned long)last_state.channel.rx_frequency/1000000,
              (unsigned long)last_state.channel.rx_frequency%1000000/10);
-    gfx_print(layout.line2_left, freq_buf, layout.line2_font, TEXT_ALIGN_CENTER,
+    gfx_print(layout.line2_pos, freq_buf, layout.line2_font, TEXT_ALIGN_CENTER,
               color_white);
     snprintf(freq_buf, sizeof(freq_buf), " Tx:%03lu.%05lu",
              (unsigned long)last_state.channel.tx_frequency/1000000,
              (unsigned long)last_state.channel.tx_frequency%1000000/10);
-    gfx_print(layout.line3_left, freq_buf, layout.line3_font, TEXT_ALIGN_CENTER,
+    gfx_print(layout.line3_pos, freq_buf, layout.line3_font, TEXT_ALIGN_CENTER,
               color_white);
 }
 
 void _ui_drawMEMMiddle()
 {
     // Print Channel name
-    gfx_print(layout.line1_left, last_state.channel.name, layout.line1_font, TEXT_ALIGN_CENTER,
+    gfx_print(layout.line1_pos, last_state.channel.name, layout.line1_font, TEXT_ALIGN_CENTER,
               color_white);
     // Print Channel frequencies
     char freq_buf[20] = "";
     snprintf(freq_buf, sizeof(freq_buf), " Rx:%03lu.%05lu",
              (unsigned long)last_state.channel.rx_frequency/1000000,
              (unsigned long)last_state.channel.rx_frequency%1000000/10);
-    gfx_print(layout.line2_left, freq_buf, layout.line2_font, TEXT_ALIGN_CENTER,
+    gfx_print(layout.line2_pos, freq_buf, layout.line2_font, TEXT_ALIGN_CENTER,
               color_white);
     snprintf(freq_buf, sizeof(freq_buf), " Tx:%03lu.%05lu",
              (unsigned long)last_state.channel.tx_frequency/1000000,
              (unsigned long)last_state.channel.tx_frequency%1000000/10);
-    gfx_print(layout.line3_left, freq_buf, layout.line3_font, TEXT_ALIGN_CENTER,
+    gfx_print(layout.line3_pos, freq_buf, layout.line3_font, TEXT_ALIGN_CENTER,
               color_white);
 }
 
@@ -124,7 +124,7 @@ void _ui_drawVFOMiddleInput(ui_state_t* ui_state)
             snprintf(freq_buf, sizeof(freq_buf), ">Rx:%03lu.%05lu",
                      (unsigned long)ui_state->new_rx_frequency/1000000,
                      (unsigned long)ui_state->new_rx_frequency%1000000/10);
-            gfx_print(layout.line2_left, freq_buf, layout.line2_font, TEXT_ALIGN_CENTER,
+            gfx_print(layout.line2_pos, freq_buf, layout.line2_font, TEXT_ALIGN_CENTER,
                       color_white);
         }
         else
@@ -133,13 +133,13 @@ void _ui_drawVFOMiddleInput(ui_state_t* ui_state)
             if(ui_state->input_position == 1)
                 strcpy(ui_state->new_rx_freq_buf, ">Rx:___._____");
             ui_state->new_rx_freq_buf[insert_pos] = input_char;
-            gfx_print(layout.line2_left, ui_state->new_rx_freq_buf, layout.line2_font, TEXT_ALIGN_CENTER,
+            gfx_print(layout.line2_pos, ui_state->new_rx_freq_buf, layout.line2_font, TEXT_ALIGN_CENTER,
                       color_white);
         }
         snprintf(freq_buf, sizeof(freq_buf), " Tx:%03lu.%05lu",
                  (unsigned long)last_state.channel.tx_frequency/1000000,
                  (unsigned long)last_state.channel.tx_frequency%1000000/10);
-        gfx_print(layout.line3_left, freq_buf, layout.line3_font, TEXT_ALIGN_CENTER,
+        gfx_print(layout.line3_pos, freq_buf, layout.line3_font, TEXT_ALIGN_CENTER,
                   color_white);
     }
     else if(ui_state->input_set == SET_TX)
@@ -147,7 +147,7 @@ void _ui_drawVFOMiddleInput(ui_state_t* ui_state)
         snprintf(freq_buf, sizeof(freq_buf), " Rx:%03lu.%05lu",
                  (unsigned long)ui_state->new_rx_frequency/1000000,
                  (unsigned long)ui_state->new_rx_frequency%1000000/10);
-        gfx_print(layout.line2_left, freq_buf, layout.line2_font, TEXT_ALIGN_CENTER,
+        gfx_print(layout.line2_pos, freq_buf, layout.line2_font, TEXT_ALIGN_CENTER,
                   color_white);
         // Replace Rx frequency with underscorses
         if(ui_state->input_position == 0)
@@ -155,7 +155,7 @@ void _ui_drawVFOMiddleInput(ui_state_t* ui_state)
             snprintf(freq_buf, sizeof(freq_buf), ">Tx:%03lu.%05lu",
                      (unsigned long)ui_state->new_rx_frequency/1000000,
                      (unsigned long)ui_state->new_rx_frequency%1000000/10);
-            gfx_print(layout.line3_left, freq_buf, layout.line3_font, TEXT_ALIGN_CENTER,
+            gfx_print(layout.line3_pos, freq_buf, layout.line3_font, TEXT_ALIGN_CENTER,
                       color_white);
         }
         else
@@ -163,7 +163,7 @@ void _ui_drawVFOMiddleInput(ui_state_t* ui_state)
             if(ui_state->input_position == 1)
                 strcpy(ui_state->new_tx_freq_buf, ">Tx:___._____");
             ui_state->new_tx_freq_buf[insert_pos] = input_char;
-            gfx_print(layout.line3_left, ui_state->new_tx_freq_buf, layout.line3_font, TEXT_ALIGN_CENTER,
+            gfx_print(layout.line3_pos, ui_state->new_tx_freq_buf, layout.line3_font, TEXT_ALIGN_CENTER,
                       color_white);
         }
     }
@@ -174,7 +174,7 @@ void _ui_drawBottom()
     // Squelch bar
     float rssi = last_state.rssi;
     float squelch = last_state.sqlLevel / 16.0f;
-    point_t smeter_pos = { 0, layout.bottom_left.y +
+    point_t smeter_pos = { 0, layout.bottom_pos.y +
                               layout.status_v_pad +
                               layout.text_v_offset -
                               layout.bottom_h };
