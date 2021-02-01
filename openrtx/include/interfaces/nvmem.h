@@ -31,6 +31,7 @@
 #ifndef NVMEM_H
 #define NVMEM_H
 
+#include "platform.h"
 #include <stdint.h>
 #include <cps.h>
 
@@ -55,6 +56,13 @@ void nvm_terminate();
  * @param buf: destination buffer for calibration data.
  */
 void nvm_readCalibData(void *buf);
+
+/**
+ * Load all or some hardware information parameters from nonvolatile memory.
+ *
+ * @param info: destination data structure for hardware information data.
+ */
+void nvm_loadHwInfo(hwInfo_t *info);
 
 /**
  * Read one channel entry from table stored in nonvolatile memory.
