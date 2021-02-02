@@ -30,9 +30,15 @@
 #include <stdio.h>
 #include "emulator.h"
 
+hwInfo_t hwInfo;
+
 void platform_init()
 {
     //printf("Platform init\n");
+    // Fill hwinfo struct
+    snprintf(hwInfo.name, 10, "Linux");
+    hwInfo.vhf_band = 1;
+    hwInfo.uhf_band = 1;
 }
 
 void platform_terminate()
@@ -120,4 +126,9 @@ void platform_beepStop()
 const void *platform_getCalibrationData()
 {
     return NULL;
+}
+
+const hwInfo_t *platform_getHwInfo()
+{
+    return &hwInfo;
 }
