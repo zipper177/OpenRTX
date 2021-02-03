@@ -51,7 +51,7 @@ bool enterRx;           /* Flag for RX mode activation        */
 
 void _afCtrlInit()
 {
-    #if defined(PLATFORM_MD380) || defined(PLATFORM_MD390)
+    #if defined(PLATFORM_MD3x0)
     gpio_setMode(SPK_MUTE, OUTPUT);
     gpio_setMode(AMP_EN,   OUTPUT);
     gpio_setMode(FM_MUTE,  OUTPUT);
@@ -65,7 +65,7 @@ void _afCtrlSpeaker(bool enable)
 {
     if(enable)
     {
-        #if defined(PLATFORM_MD380) || defined(PLATFORM_MD390)
+        #if defined(PLATFORM_MD3x0)
         gpio_setPin(AMP_EN);
         gpio_setPin(FM_MUTE);
         gpio_clearPin(SPK_MUTE);
@@ -75,7 +75,7 @@ void _afCtrlSpeaker(bool enable)
     }
     else
     {
-        #if defined(PLATFORM_MD380) || defined(PLATFORM_MD390)
+        #if defined(PLATFORM_MD3x0)
         gpio_clearPin(AMP_EN);
         gpio_clearPin(FM_MUTE);
         gpio_setPin(SPK_MUTE);
@@ -89,13 +89,13 @@ void _afCtrlMic(bool enable)
 {
      if(enable)
     {
-        #if defined(PLATFORM_MD380) || defined(PLATFORM_MD390)
+        #if defined(PLATFORM_MD3x0)
         gpio_setPin(MIC_PWR);
         #endif
     }
     else
     {
-        #if defined(PLATFORM_MD380) || defined(PLATFORM_MD390)
+        #if defined(PLATFORM_MD3x0)
         gpio_clearPin(MIC_PWR);
         #endif
     }
