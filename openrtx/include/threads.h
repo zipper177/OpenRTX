@@ -63,7 +63,7 @@ void create_threads();
 /**
  * Stack size for GPS task, in bytes.
  */
-#define GPS_TASK_STKSIZE 4096
+#define GPS_TASK_STKSIZE 2048
 
 #else /* __arm__ */
 
@@ -83,6 +83,11 @@ void create_threads();
  * Stack size for baseband control task, in bytes.
  */
 #define RTX_TASK_STKSIZE 1024
+
+/**
+ * Stack size for GPS task, in bytes.
+ */
+#define GPS_TASK_STKSIZE 1024
 
 #endif /* __arm__ */
 
