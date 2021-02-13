@@ -68,6 +68,7 @@ void gps_taskFunc(char *line, int len, gps_t *state)
 
         case MINMEA_SENTENCE_GSA:
         {
+            state->active_sats = 0;
             struct minmea_sentence_gsa frame;
             if (minmea_parse_gsa(&frame, line))
             {
@@ -76,14 +77,7 @@ void gps_taskFunc(char *line, int len, gps_t *state)
                 {
                     if (frame.sats[i] != 0)
                     {
-                        for (int j = 0; j < 12; j++)
-                        {
-                            if (state->satellites[j].id == frame.sats[i])
-                            {
-                                state->satellites[j].active = true;
-                                break;
-                            }
-                        }
+                        state->active_sats |= 1 << frame.sats[i];
                     }
                 }
             }
@@ -102,7 +96,6 @@ void gps_taskFunc(char *line, int len, gps_t *state)
                     state->satellites[index].elevation = frame.sats[i].elevation;
                     state->satellites[index].azimuth = frame.sats[i].azimuth;
                     state->satellites[index].snr = frame.sats[i].snr;
-                    state->satellites[index].active = false;
                 }
                 // Zero out unused satellite slots
                 if (frame.msg_nr == frame.total_msgs && frame.total_msgs < 3)
