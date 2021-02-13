@@ -263,6 +263,7 @@ static void dev_task(void *arg)
 
 #ifdef HAS_RTC
         state.time = rtc_getTime();
+        state_applyTimezone();
 #endif
         state.v_bat = platform_getVbat();
         state.charge = battery_getCharge(state.v_bat);
