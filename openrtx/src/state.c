@@ -78,4 +78,9 @@ void state_init()
     state.voxLevel = 0;
 
     state.emergency = false;
+    // Initialize settings_t
+    // TODO: settings_t should be read from flash memory or from a factory default
+    state.settings = (settings_t){ 0 };
+    state.settings.brightness = 255;
+    state.settings.contrast = 84;
 }
