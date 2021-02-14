@@ -36,7 +36,9 @@
 #include <interfaces/keyboard.h>
 #include <interfaces/graphics.h>
 #include <interfaces/platform.h>
+#ifdef HAS_GPS
 #include <interfaces/gps.h>
+#endif
 #include <hwconfig.h>
 #include <event.h>
 #include <rtx.h>
@@ -83,9 +85,11 @@ static CPU_STK dev_stk[DEV_TASK_STKSIZE/sizeof(CPU_STK)];
 static OS_TCB  rtx_tcb;
 static CPU_STK rtx_stk[RTX_TASK_STKSIZE/sizeof(CPU_STK)];
 
+#ifdef HAS_GPS
 /* GPS task control block and stack */
 static OS_TCB  gps_tcb;
 static CPU_STK gps_stk[GPS_TASK_STKSIZE/sizeof(CPU_STK)];
+#endif
 
 /**
  * \internal Task function in charge of updating the UI.
@@ -300,6 +304,7 @@ static void rtx_task(void *arg)
     }
 }
 
+#ifdef HAS_GPS
 /**
  * \internal Task function for parsing GPS data and updating radio state.
  */
@@ -362,6 +367,7 @@ static void gps_task(void *arg)
         }
     }
 }
+#endif
 
 /**
  * \internal This function creates all the system tasks and mutexes.
@@ -439,6 +445,7 @@ void create_threads()
                  (OS_OPT      ) (OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR),
                  (OS_ERR     *) &os_err);
 
+#ifdef HAS_GPS
     // Create GPS thread
     OSTaskCreate((OS_TCB     *) &gps_tcb,
                  (CPU_CHAR   *) "GPS Task",
@@ -453,6 +460,7 @@ void create_threads()
                  (void       *) 0,
                  (OS_OPT      ) (OS_OPT_TASK_STK_CHK | OS_OPT_TASK_STK_CLR),
                  (OS_ERR     *) &os_err);
+#endif
 
     // Create state thread
     OSTaskCreate((OS_TCB     *) &dev_tcb,

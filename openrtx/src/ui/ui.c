@@ -77,7 +77,9 @@
 #include <rtx.h>
 #include <interfaces/platform.h>
 #include <interfaces/nvmem.h>
+#ifdef HAS_GPS
 #include <interfaces/gps.h>
+#endif
 #include <string.h>
 #include <battery.h>
 #include <input.h>
@@ -98,7 +100,10 @@ extern void _ui_drawMenuTop(ui_state_t* ui_state);
 extern void _ui_drawMenuZone(ui_state_t* ui_state);
 extern void _ui_drawMenuChannel(ui_state_t* ui_state);
 extern void _ui_drawMenuContacts(ui_state_t* ui_state);
+#ifdef HAS_GPS
 extern void _ui_drawMenuGPS();
+extern void _ui_drawSettingsGPS(ui_state_t* ui_state);
+#endif
 extern void _ui_drawMenuSettings(ui_state_t* ui_state);
 extern void _ui_drawMenuInfo(ui_state_t* ui_state);
 extern void _ui_drawMenuAbout();
@@ -107,7 +112,6 @@ extern void _ui_drawSettingsTimeDate();
 extern void _ui_drawSettingsTimeDateSet(ui_state_t* ui_state);
 #endif
 extern void _ui_drawSettingsDisplay(ui_state_t* ui_state);
-extern void _ui_drawSettingsGPS(ui_state_t* ui_state);
 extern bool _ui_drawMacroMenu();
 
 const char *menu_items[] =
@@ -116,7 +120,9 @@ const char *menu_items[] =
     "Channels",
     "Contacts",
     "Messages",
+#ifdef HAS_GPS
     "GPS",
+#endif
     "Settings",
     "Info",
     "About"
@@ -128,7 +134,9 @@ const char *settings_items[] =
     "Time & Date",
 #endif
     "Display",
+#ifdef HAS_GPS
     "GPS"
+#endif
 };
 
 const char *display_items[] =
@@ -139,12 +147,14 @@ const char *display_items[] =
 #endif
 };
 
+#ifdef HAS_GPS
 const char *settings_gps_items[] =
 {
     "GPS Enabled",
     "GPS Set Time",
     "UTC Timezone"
 };
+#endif
 
 const char *info_items[] =
 {
@@ -170,7 +180,9 @@ const char *authors[] =
 const uint8_t menu_num = sizeof(menu_items)/sizeof(menu_items[0]);
 const uint8_t settings_num = sizeof(settings_items)/sizeof(settings_items[0]);
 const uint8_t display_num = sizeof(display_items)/sizeof(display_items[0]);
+#ifdef HAS_GPS
 const uint8_t settings_gps_num = sizeof(settings_gps_items)/sizeof(settings_gps_items[0]);
+#endif
 const uint8_t info_num = sizeof(info_items)/sizeof(info_items[0]);
 const uint8_t author_num = sizeof(authors)/sizeof(authors[0]);
 
@@ -829,33 +841,24 @@ void ui_updateFSM(event_t event, bool *sync_rtx)
                 else if(msg.keys & KEY_ENTER)
                 {
                     // Open selected menu item
-                    switch(ui_state.menu_selected)
-                    {
-                        case 0:
-                            state.ui_screen = MENU_ZONE;
-                            break;
-                        case 1:
-                            state.ui_screen = MENU_CHANNEL;
-                            break;
-                        case 2:
-                            state.ui_screen = MENU_CONTACTS;
-                            break;
-                        case 4:
-                            state.ui_screen = MENU_GPS;
-                            break;
-                        // TODO: Add missing submenu states
-                        case 5:
-                            state.ui_screen = MENU_SETTINGS;
-                            break;
-                        case 6:
-                            state.ui_screen = MENU_INFO;
-                            break;
-                        case 7:
-                            state.ui_screen = MENU_ABOUT;
-                            break;
-                        default:
-                            state.ui_screen = MENU_TOP;
-                    }
+                    if(strcmp(menu_items[ui_state.menu_selected], "Zone") == 0)
+                        state.ui_screen = MENU_ZONE;
+                    else if(strcmp(menu_items[ui_state.menu_selected], "Channels") == 0)
+                        state.ui_screen = MENU_CHANNEL;
+                    else if(strcmp(menu_items[ui_state.menu_selected], "Contacts") == 0)
+                        state.ui_screen = MENU_CONTACTS;
+                    else if(strcmp(menu_items[ui_state.menu_selected], "Messages") == 0)
+                        state.ui_screen = MENU_TOP;
+                    else if(strcmp(menu_items[ui_state.menu_selected], "GPS") == 0)
+                        state.ui_screen = MENU_GPS;
+                    else if(strcmp(menu_items[ui_state.menu_selected], "Settings") == 0)
+                        state.ui_screen = MENU_SETTINGS;
+                    else if(strcmp(menu_items[ui_state.menu_selected], "Info") == 0)
+                        state.ui_screen = MENU_INFO;
+                    else if(strcmp(menu_items[ui_state.menu_selected], "About") == 0)
+                        state.ui_screen = MENU_ABOUT;
+                    else
+                        state.ui_screen = MENU_TOP;
                     // Reset menu selection
                     ui_state.menu_selected = 0;
                 }
@@ -935,11 +938,13 @@ void ui_updateFSM(event_t event, bool *sync_rtx)
                 else if(msg.keys & KEY_ESC)
                     _ui_menuBack(MENU_TOP);
                 break;
+#ifdef HAS_GPS
             // GPS menu screen
             case MENU_GPS:
                 if(msg.keys & KEY_ESC)
                     _ui_menuBack(MENU_TOP);
                 break;
+#endif
             // Settings menu screen
             case MENU_SETTINGS:
                 if(msg.keys & KEY_UP)
@@ -952,8 +957,10 @@ void ui_updateFSM(event_t event, bool *sync_rtx)
                         state.ui_screen = SETTINGS_TIMEDATE;
                     else if(strcmp(settings_items[ui_state.menu_selected], "Display") == 0)
                         state.ui_screen = SETTINGS_DISPLAY;
+#ifdef HAS_GPS
                     else if(strcmp(settings_items[ui_state.menu_selected], "GPS") == 0)
                         state.ui_screen = SETTINGS_GPS;
+#endif
                     else
                         state.ui_screen = MENU_TOP;
                     // Reset menu selection
@@ -1056,6 +1063,7 @@ void ui_updateFSM(event_t event, bool *sync_rtx)
                 else if(msg.keys & KEY_ESC)
                     _ui_menuBack(MENU_SETTINGS);
                 break;
+#ifdef HAS_GPS
             case SETTINGS_GPS:
                 if(msg.keys & KEY_LEFT || msg.keys & KEY_RIGHT || 
                    ((msg.keys & KEY_UP || msg.keys & KEY_DOWN) && ui_state.edit_mode))
@@ -1093,6 +1101,7 @@ void ui_updateFSM(event_t event, bool *sync_rtx)
                 else if(msg.keys & KEY_ESC)
                     _ui_menuBack(MENU_SETTINGS);
                 break;
+#endif
         }
     }
 }
@@ -1135,10 +1144,12 @@ void ui_updateGUI()
         case MENU_CONTACTS:
             _ui_drawMenuContacts(&ui_state);
             break;
+#ifdef HAS_GPS
         // GPS menu screen
         case MENU_GPS:
             _ui_drawMenuGPS();
             break;
+#endif
         // Settings menu screen
         case MENU_SETTINGS:
             _ui_drawMenuSettings(&ui_state);
@@ -1165,10 +1176,12 @@ void ui_updateGUI()
         case SETTINGS_DISPLAY:
             _ui_drawSettingsDisplay(&ui_state);
             break;
+#ifdef HAS_GPS
         // GPS settings screen
         case SETTINGS_GPS:
             _ui_drawSettingsGPS(&ui_state);
             break;
+#endif
         // Low battery screen
         case LOW_BAT:
             _ui_drawLowBatteryScreen();
