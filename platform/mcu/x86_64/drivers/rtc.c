@@ -41,7 +41,7 @@ void rtc_terminate()
     printf("rtc_shutdown()\n");
 }
 
-void rtc_setTime(curTime_t t)
+void rtc_setTime(__attribute__((unused)) curTime_t t)
 {
     printf("rtc_setTime(t)\n");
 }

@@ -1,7 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2021 by Federico Amedeo Izzo IU2NUO,                    *
- *                         Niccolò Izzo IU2KIN                             *
- *                         Frederik Saraci IU2NRO                          *
+ *   Copyright (C) 2020 by Federico Amedeo Izzo IU2NUO,                    *
+ *                         Niccolò Izzo IU2KIN,                            *
  *                         Silvano Seva IU2KWO                             *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
@@ -28,63 +27,16 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>   *
  ***************************************************************************/
 
-#include <interfaces/gps.h>
-#include <hwconfig.h>
-#include <string.h>
-#include <os.h>
+#ifndef GPS_H
+#define GPS_H
 
-#define MAX_NMEA_LEN 80
-#define NMEA_SAMPLES 8
+#include <state.h>
 
-char test_nmea_sentences [NMEA_SAMPLES][MAX_NMEA_LEN] = {
-    "$GPGGA,223659.522,5333.735,N,00959.130,E,1,12,1.0,0.0,M,0.0,M,,*62",
-    "$GPGSA,A,3,01,02,03,04,05,06,07,08,09,10,11,12,1.0,1.0,1.0*30",
-    "$GPGSV,3,1,12,30,79,066,27,05,63,275,21,07,42,056,,13,40,289,13*76",
-    "$GPGSV,3,2,12,14,36,147,20,28,30,151,,09,13,100,,02,08,226,30*72",
-    "$GPGSV,3,3,12,18,05,333,,15,04,289,22,08,03,066,,27,02,030,*79",
-    "$GPRMC,223659.522,A,5333.735,N,00959.130,E,,,160221,000.0,W*70",
-    "$GPVTG,92.15,T,,M,0.15,N,0.28,K,A*0C"
-};
+/**
+ * This function perfoms the task of reading data from the GPS module,
+ * if available, enabled and ready, decode NMEA sentences and update
+ * the radio state with the retrieved data.
+ */
+void gps_taskFunc(char *line, int len, state_t *state);
 
-void gps_init(__attribute__((unused)) const uint16_t baud)
-{
-    ;
-}
-
-void gps_terminate()
-{
-    ;
-}
-
-void gps_enable()
-{
-    ;
-}
-
-void gps_disable()
-{
-    ;
-}
-
-bool gps_detect(__attribute__((unused)) uint16_t timeout)
-{
-    return true;
-}
-
-int gps_getNmeaSentence(char *buf, const size_t maxLength)
-{
-    OS_ERR os_err;
-    static int i = 0;
-
-    // Emulate GPS device by sending NMEA sentences every 1s
-    if(i == 0)
-        OSTimeDlyHMSM(0u, 0u, 1u, 0u, OS_OPT_TIME_HMSM_STRICT, &os_err);
-    size_t len = strnlen(test_nmea_sentences[i], MAX_NMEA_LEN);
-    if (len > maxLength)
-        return -1;
-    strncpy(buf, test_nmea_sentences[i], maxLength);
-    i++;
-    i %= NMEA_SAMPLES;
-    return len;
-}
-
+#endif /* GPS_H */
