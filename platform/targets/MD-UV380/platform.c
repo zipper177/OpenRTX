@@ -75,6 +75,8 @@ void platform_init()
 
     gpio_setMode(PTT_SW, INPUT);
 
+    gpio_setMode(PWR_SW, OUTPUT);
+
     /*
      * Initialise ADC1, for vbat, RSSI, ...
      * Configuration of corresponding GPIOs in analog input mode is done inside
@@ -138,6 +140,9 @@ void platform_terminate()
     adc1_terminate();
     nvm_terminate();
     rtc_terminate();
+
+    /* Finally, remove power supply */
+    gpio_clearPin(PWR_SW, OUTPUT);
 }
 
 float platform_getVbat()
