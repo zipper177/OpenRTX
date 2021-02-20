@@ -215,6 +215,7 @@ layout_t _ui_calculateLayout()
     const uint16_t line1_h = 20;
     const uint16_t line2_h = 20;
     const uint16_t line3_h = 40;
+    const uint16_t menu_h = 16;
     const uint16_t bottom_h = 20;
     const uint16_t bottom_pad = top_pad;
     const uint16_t status_v_pad = 2;
@@ -233,6 +234,8 @@ layout_t _ui_calculateLayout()
     const fontSize_t bottom_font = FONT_SIZE_8PT;
     // TimeDate/Frequency input font
     const fontSize_t input_font = FONT_SIZE_12PT;
+    // Menu font
+    const fontSize_t menu_font = FONT_SIZE_8PT;
 
     // Radioddity GD-77
     #elif SCREEN_HEIGHT > 63
@@ -243,6 +246,7 @@ layout_t _ui_calculateLayout()
     const uint16_t line1_h = 10;
     const uint16_t line2_h = 10;
     const uint16_t line3_h = 16;
+    const uint16_t menu_h = 10;
     const uint16_t bottom_h = 8;
     const uint16_t bottom_pad = 0;
     const uint16_t status_v_pad = 1;
@@ -260,6 +264,8 @@ layout_t _ui_calculateLayout()
     const fontSize_t bottom_font = FONT_SIZE_6PT;
     // TimeDate/Frequency input font
     const fontSize_t input_font = FONT_SIZE_8PT;
+    // Menu font
+    const fontSize_t menu_font = FONT_SIZE_6PT;
 
     // Radioddity RD-5R
     #elif SCREEN_HEIGHT > 47
@@ -270,6 +276,7 @@ layout_t _ui_calculateLayout()
     const uint16_t line1_h = 0;
     const uint16_t line2_h = 10;
     const uint16_t line3_h = 18;
+    const uint16_t menu_h = 10;
     const uint16_t bottom_h = 0;
     const uint16_t bottom_pad = 0;
     const uint16_t status_v_pad = 1;
@@ -284,6 +291,8 @@ layout_t _ui_calculateLayout()
     const fontSize_t line3_font = FONT_SIZE_12PT;
     // TimeDate/Frequency input font
     const fontSize_t input_font = FONT_SIZE_8PT;
+    // Menu font
+    const fontSize_t menu_font = FONT_SIZE_6PT;
     // Not present on this resolution
     const fontSize_t line1_font = 0;
     const fontSize_t bottom_font = 0;
@@ -306,6 +315,7 @@ layout_t _ui_calculateLayout()
         line1_h,
         line2_h,
         line3_h,
+        menu_h,
         bottom_h,
         status_v_pad,
         horizontal_pad,
@@ -320,7 +330,8 @@ layout_t _ui_calculateLayout()
         line2_font,
         line3_font,
         bottom_font,
-        input_font
+        input_font,
+        menu_font
     };
     return new_layout;
 }
