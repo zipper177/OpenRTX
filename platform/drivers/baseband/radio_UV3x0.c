@@ -64,7 +64,7 @@ void radio_setCSS(const tone_t rxCss, const tone_t txCss)
 
 bool radio_checkRxDigitalSquelch()
 {
-
+    return false;
 }
 
 void radio_enableRx()
