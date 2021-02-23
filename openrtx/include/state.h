@@ -123,7 +123,7 @@ enum RtxStatus
     RTX_TX
 };
 
-state_t state;
+extern state_t state;
 
 /**
  * This function initializes the Radio state, acquiring the information
