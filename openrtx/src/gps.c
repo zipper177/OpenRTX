@@ -34,6 +34,8 @@
 #include <state.h>
 #include <strings.h>
 
+#define KNOTS2KMH 1.852f
+
 /**
  * This function parses a GPS NMEA sentence and updates radio state
  */
@@ -57,6 +59,8 @@ void gps_taskFunc(char *line, __attribute__((unused)) int len, state_t *state)
             // Synchronize RTC with GPS UTC clock
             if(state->settings.gps_set_time)
                 rtc_setTime(state->gps_data.timestamp);
+            state->gps_data.tmg_true = minmea_tofloat(&frame.course);
+            state->gps_data.speed = minmea_tofloat(&frame.speed) * KNOTS2KMH;
         } break;
 
         case MINMEA_SENTENCE_GGA:
