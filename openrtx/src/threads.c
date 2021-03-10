@@ -236,7 +236,7 @@ void *dev_task(void *arg)
 
         // Low-pass filtering with a time constant of 10s when updated at 1Hz
         float vbat = platform_getVbat();
-        state.v_bat = 0.02*vbat + 0.98*state.v_bat;
+        state.v_bat = 8.0f;// 0.02*vbat + 0.98*state.v_bat;
 
         state.charge = battery_getCharge(state.v_bat);
         state.rssi = rtx_getRssi();
@@ -352,7 +352,7 @@ void create_threads()
 
     pthread_attr_init(&kbd_attr);
     pthread_attr_setstacksize(&kbd_attr, KBD_TASK_STKSIZE);
-//     pthread_create(&kbd_thread, &kbd_attr, kbd_task, NULL);
+    pthread_create(&kbd_thread, &kbd_attr, kbd_task, NULL);
 
 #ifdef HAS_GPS
     // Create GPS thread
@@ -361,8 +361,7 @@ void create_threads()
 
     pthread_attr_init(&gps_attr);
     pthread_attr_setstacksize(&gps_attr, GPS_TASK_STKSIZE);
-//     pthread_create(&gps_thread, &gps_attr, gps_task, NULL);
-
+    pthread_create(&gps_thread, &gps_attr, gps_task, NULL);
 #endif
 
     // Create state thread
@@ -371,5 +370,5 @@ void create_threads()
 
     pthread_attr_init(&state_attr);
     pthread_attr_setstacksize(&state_attr, DEV_TASK_STKSIZE);
-//     pthread_create(&state_thread, &state_attr, dev_task, NULL);
+    pthread_create(&state_thread, &state_attr, dev_task, NULL);
 }
