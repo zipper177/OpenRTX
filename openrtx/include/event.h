@@ -58,7 +58,7 @@ typedef union
                  payload : 30;
     };
 
-    void *value;
+    uint32_t value;
 }event_t;
 
 #endif /* EVENT_H */
