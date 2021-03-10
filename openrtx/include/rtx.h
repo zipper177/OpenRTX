@@ -34,7 +34,7 @@
 #include <datatypes.h>
 #include <stdint.h>
 #include <cps.h>
-#include <os.h>
+#include <pthread.h>
 
 typedef struct
 {
@@ -93,7 +93,7 @@ enum opstatus
  * @param m: pointer to the mutex protecting the shared configuration data
  * structure.
  */
-void rtx_init(OS_MUTEX *m);
+void rtx_init(pthread_mutex_t *m);
 
 /**
  * Shut down rtx stage

@@ -29,7 +29,6 @@
 
 #include <interfaces/platform.h>
 #include <interfaces/gpio.h>
-#include <os.h>
 #include <hwconfig.h>
 #include <string.h>
 #include <ADC1_MDx.h>
@@ -41,10 +40,8 @@ mduv3x0Calib_t calibration;
 hwInfo_t hwInfo;
 
 #ifdef ENABLE_BKLIGHT_DIMMING
-void TIM1_TRG_COM_TIM11_IRQHandler()
+void _Z29TIM1_TRG_COM_TIM11_IRQHandlerv()
 {
-    OSIntEnter();
-
     if(TIM11->SR & TIM_SR_CC1IF)
     {
         gpio_clearPin(LCD_BKLIGHT); /* Clear pin on compare match */
@@ -56,8 +53,6 @@ void TIM1_TRG_COM_TIM11_IRQHandler()
     }
 
     TIM11->SR = 0;
-
-    OSIntExit();
 }
 #endif
 
