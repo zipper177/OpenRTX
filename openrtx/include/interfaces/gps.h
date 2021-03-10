@@ -35,6 +35,10 @@
 #include <stdint.h>
 #include <stddef.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * Low-level driver for interfacing with radio's on-board GPS module.
  */
@@ -76,5 +80,9 @@ bool gps_detect(uint16_t timeout);
  * @return number of characters written in the buffer or -1 on error.
  */
 int gps_getNmeaSentence(char *buf, const size_t maxLength);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* INTERFACES_GPS_H */

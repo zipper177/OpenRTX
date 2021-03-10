@@ -31,6 +31,10 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * Standard interface for all low-level display drivers.
  *
@@ -113,5 +117,9 @@ bool display_renderingInProgress();
  * @param contrast: display contrast, normalised value with range 0 - 255.
  */
 void display_setContrast(uint8_t contrast);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* DISPLAY_H */

@@ -33,6 +33,10 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * Standard interface for device-specific hardware.
  * This interface handles:
@@ -161,5 +165,9 @@ const void *platform_getCalibrationData();
  * @return pointer to device's hardware information.
  */
 const hwInfo_t *platform_getHwInfo();
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* PLATFORM_H */

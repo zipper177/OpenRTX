@@ -28,6 +28,10 @@
 #ifndef DELAYS_H
 #define DELAYS_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * Function prototypes for microsecond and millisecond delays.
  * Their implementation is device-specific, thus it is placed inside the drivers
@@ -45,5 +49,9 @@ void delayUs(unsigned int useconds);
  * @param mseconds: delay value
  */
 void delayMs(unsigned int mseconds);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* DELAYS_H */
