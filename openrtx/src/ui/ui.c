@@ -1082,7 +1082,7 @@ void ui_updateFSM(event_t event, bool *sync_rtx)
                             break;
 #ifdef SCREEN_CONTRAST
                         case D_CONTRAST:
-                            _ui_changeContrast(-25);
+                            _ui_changeContrast(-4);
                             break;
 #endif
                         default:
@@ -1098,7 +1098,7 @@ void ui_updateFSM(event_t event, bool *sync_rtx)
                             break;
 #ifdef SCREEN_CONTRAST
                         case D_CONTRAST:
-                            _ui_changeContrast(+25);
+                            _ui_changeContrast(+4);
                             break;
 #endif
                         default:
