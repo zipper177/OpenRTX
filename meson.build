@@ -23,7 +23,7 @@ openrtx_src = ['openrtx/src/state.c',
                'openrtx/src/queue.c',
                'openrtx/src/rtx.c',
                'openrtx/src/gps.c',
-               'tests/platform/M17_6dB_v2.c']
+               'tests/platform/rick_shorter.c']
 
 
 ## Replace main executable with platform test
@@ -33,7 +33,7 @@ openrtx_src = ['openrtx/src/state.c',
 #   openrtx_src += 'openrtx/src/main.c'
 # endif
 
-openrtx_src += 'tests/platform/M17_mod.c'
+openrtx_src += 'tests/platform/speaker_test.c'
 
 openrtx_inc = ['openrtx/include',
                'openrtx/include/calibration',
