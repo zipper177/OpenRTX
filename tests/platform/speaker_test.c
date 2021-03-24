@@ -40,24 +40,11 @@
 #include <hwconfig.h>
 
 extern int16_t m17_buf[];
-extern uint16_t nSamples;
-
-// void __attribute__((used)) _Z23DMA1_Stream2_IRQHandlerv()
-// {
-//     GPIOE->BSRRL = 1;
-//     DMA1->LIFCR |= DMA_LIFCR_CTCIF2 | DMA_LIFCR_CTEIF2;
-//     GPIOB->BSRRL = 1 << 3;
-//     delayUs(20);
-//     GPIOB->BSRRH = 1 << 3;
-//     GPIOE->BSRRH = 1;
-// }
+// extern size_t nSamples;
 
 int main(void)
 {
     platform_init();
-
-//     gpio_setMode(GPIOB, 3, OUTPUT);
-//     gpio_clearPin(GPIOB, 3);
 
     /* AF2 is TIM3 channel 3 */
     gpio_setMode(BEEP_OUT, ALTERNATE);
@@ -67,7 +54,15 @@ int main(void)
     /*
      * Prepare buffer for 8-bit waveform samples
      */
+    size_t nSamples = 60*1024;
     uint16_t *buf = ((uint16_t *) malloc(nSamples * sizeof(uint16_t)));
+
+    if(buf == NULL)
+    {
+        platform_ledOn(RED);
+        while(1) ;
+    }
+
     for(size_t i = 0; i < nSamples; i++)
     {
         int16_t sample = 32768 - m17_buf[i];
@@ -102,8 +97,7 @@ int main(void)
     TIM7->PSC  = 0;
     TIM7->ARR  = 1749;//(84000000/48000) - 1;
     TIM7->EGR  = TIM_EGR_UG;
-    TIM7->DIER = TIM_DIER_UDE
-               | TIM_DIER_UIE;
+    TIM7->DIER = TIM_DIER_UDE;
     TIM7->CR1  = TIM_CR1_CEN;
 
     /*
@@ -121,38 +115,10 @@ int main(void)
                      | DMA_SxCR_DIR_0         /* Memory to peripheral        */
                      | DMA_SxCR_EN;           /* Start transfer              */
 
-//                      | DMA_SxCR_TCIE          /* Transfer complete interrupt */
-//                      | DMA_SxCR_TEIE          /* Transfer error interrupt    */
 
-//     NVIC_ClearPendingIRQ(DMA1_Stream2_IRQn);
-//     NVIC_SetPriority(DMA1_Stream2_IRQn, 10);
-//     NVIC_EnableIRQ(DMA1_Stream2_IRQn);
-
-    /*
-     * Baseband setup
-     */
-    pthread_mutex_t rtx_mutex;
-    pthread_mutex_init(&rtx_mutex, NULL);
-
-    rtx_init(&rtx_mutex);
-    rtxStatus_t cfg;
-
-    /* Take mutex and update the RTX configuration */
-    pthread_mutex_lock(&rtx_mutex);
-
-    cfg.opMode = FM;
-    cfg.bandwidth = BW_25;
-    cfg.rxFrequency = 435000000;
-    cfg.txFrequency = 435000000;
-    cfg.txPower = 1.0f;
-    cfg.sqlLevel = 3;
-    cfg.rxTone = 0;
-    cfg.txTone = 0;
-
-    pthread_mutex_unlock(&rtx_mutex);
-
-    /* After mutex has been released, post the new configuration */
-    rtx_configure(&cfg);
+    /* Turn on audio amplifier and unmute speaker */
+    gpio_setMode(AUDIO_AMP_EN, OUTPUT);
+    gpio_setMode(SPK_MUTE,     OUTPUT);
 
     gpio_setPin(AUDIO_AMP_EN);
     delayMs(10);
@@ -160,8 +126,10 @@ int main(void)
 
     while(1)
     {
-        rtx_taskFunc();
-        delayMs(10);
+        platform_ledOn(GREEN);
+        delayMs(300);
+        platform_ledOff(GREEN);
+        delayMs(300);
     }
 
     return 0;
