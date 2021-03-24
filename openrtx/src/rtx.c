@@ -189,6 +189,7 @@ void rtx_init(pthread_mutex_t *m)
     rssi = radio_getRssi(rtxStatus.rxFrequency);
 
     _afCtrlInit();
+    _afCtrlSpeaker(false);
 }
 
 void rtx_terminate()
@@ -288,24 +289,17 @@ void rtx_taskFunc()
 
         float squelch = -127.0f + rtxStatus.sqlLevel * 66.0f / 15.0f;
 
-        if((sqlOpen == false) && (rssi > (squelch + 0.1f)))
-        {
-            _afCtrlSpeaker(true);
-            sqlOpen = true;
-        }
-
-        if((sqlOpen == true) && (rssi < (squelch - 0.1f)))
-        {
-            _afCtrlSpeaker(false);
-            sqlOpen = false;
-        }
-        #ifdef PLATFORM_MDUV380
-        if(sqlOpen == true)
-        {
-            // Set output volume by changing the HR_C6000 DAC gain
-            _afSetVolume();
-        }
-        #endif
+//         if((sqlOpen == false) && (rssi > (squelch + 0.1f)))
+//         {
+//             _afCtrlSpeaker(true);
+//             sqlOpen = true;
+//         }
+//
+//         if((sqlOpen == true) && (rssi < (squelch - 0.1f)))
+//         {
+//             _afCtrlSpeaker(false);
+//             sqlOpen = false;
+//         }
     }
     else if((rtxStatus.opMode == OFF) && enterRx)
     {
