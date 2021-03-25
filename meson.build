@@ -191,6 +191,7 @@ mduv3x0_def = def + stm32f405_def + {'PLATFORM_MDUV380': ''}
 
 ## TYT MD-9600
 md9600_src = src + stm32f405_src + ['platform/targets/MD-9600/platform.c',
+                                    'platform/drivers/keyboard/keyboard_MD9600.c',
                                     'platform/drivers/tones/toneGenerator_MDx.c']
 
 md9600_inc = inc + stm32f405_inc + ['platform/targets/MD-9600']
