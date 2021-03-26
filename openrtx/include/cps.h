@@ -66,7 +66,8 @@ typedef struct
             rxTone   : 7; /**< RX CTC/DCS tone index, squelch opens on match */
     uint8_t txToneEn : 1, /**< TX CTC/DCS tone enable                        */
             txTone   : 7; /**< TX CTC/DCS tone index, sent alongside voice   */
-} fmInfo_t;
+}
+__attribute__((packed)) fmInfo_t;
 
 /**
  * Data structure containing all and only the information for DMR channels.
@@ -78,7 +79,8 @@ typedef struct
 
     uint8_t  dmr_timeslot;      /**< DMR timeslot, either 1 or 2              */
     uint16_t contactName_index; /**< Index to retrieve data from contact list */
-} dmrInfo_t;
+}
+__attribute__((packed)) dmrInfo_t;
 
 /**
  * Data structure containing all the information of a channel, either FM or DMR.
@@ -111,7 +113,8 @@ typedef struct
         fmInfo_t  fm;           /**< Information block for FM channels        */
         dmrInfo_t dmr;          /**< Information block for DMR channels       */
     };
-} channel_t;
+}
+__attribute__((packed)) channel_t;
 
 /**
  * Data structure containing all the information of a zone.
@@ -120,7 +123,8 @@ typedef struct
 {
     char name[16];              /**< Zone name                             */
     uint16_t member[64];        /**< Channel indexes                       */
-} zone_t;
+}
+__attribute__((packed)) zone_t;
 
 /**
  * Data structure containing all the information of a contact.
@@ -131,6 +135,7 @@ typedef struct
     uint32_t id;                /**< DMR ID: 24bit number, 1...16777215       */
     uint8_t type;               /**< Call Type: Group Call, Private Call or All Call */
     bool receive_tone;          /**< Call Receive Tone: No or yes             */
-} contact_t;
+}
+__attribute__((packed)) contact_t;
 
 #endif
