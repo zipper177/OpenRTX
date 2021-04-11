@@ -54,7 +54,6 @@ enum uiScreen
     MENU_ZONE,
     MENU_CHANNEL,
     MENU_CONTACTS,
-    MENU_SMS,
     MENU_GPS,
     MENU_SETTINGS,
     MENU_INFO,
@@ -79,7 +78,6 @@ enum menuItems
     M_ZONE = 0,
     M_CHANNEL,
     M_CONTACTS,
-    M_MESSAGES,
 #ifdef HAS_GPS
     M_GPS,
 #endif
