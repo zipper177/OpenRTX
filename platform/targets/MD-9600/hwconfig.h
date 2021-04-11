@@ -55,6 +55,7 @@
 
 /* Screen has adjustable contrast */
 #define SCREEN_CONTRAST
+#define DEFAULT_CONTRAST 91
 
 /* Screen pixel format */
 #define PIX_FMT_BW
