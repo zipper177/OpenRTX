@@ -38,6 +38,7 @@
 #include <calibInfo_MDx.h>
 #include <toneGenerator_MDx.h>
 #include <interfaces/rtc.h>
+#include <interfaces/audio.h>
 #include <SPI2.h>
 #include <chSelector.h>
 
@@ -87,6 +88,7 @@ void platform_init()
     rtc_init();                      /* Initialise RTC                         */
     backlight_init();                /* Initialise backlight driver            */
     chSelector_init();               /* Initialise channel selector handler    */
+    audio_init();                    /* Initialise audio management module     */
 }
 
 void platform_terminate()
@@ -99,6 +101,7 @@ void platform_terminate()
     toneGen_terminate();
     rtc_terminate();
     chSelector_terminate();
+    audio_terminate();
 
     /* Finally, remove power supply */
     gpio_clearPin(PWR_SW);

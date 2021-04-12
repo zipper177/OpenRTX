@@ -35,6 +35,7 @@
 #include <calibInfo_MDx.h>
 #include <interfaces/nvmem.h>
 #include <interfaces/rtc.h>
+#include <interfaces/audio.h>
 #include <chSelector.h>
 
 #ifdef ENABLE_BKLIGHT_DIMMING
@@ -68,6 +69,7 @@ void platform_init()
     nvm_loadHwInfo(&hwInfo);         /* Load hardware information data         */
     rtc_init();                      /* Initialise RTC                         */
     chSelector_init();               /* Initialise channel selector handler    */
+    audio_init();                    /* Initialise audio management module     */
 
     #ifdef ENABLE_BKLIGHT_DIMMING
     backlight_init();                /* Initialise backlight driver            */
@@ -95,6 +97,7 @@ void platform_terminate()
     nvm_terminate();
     rtc_terminate();
     chSelector_terminate();
+    audio_terminate();
 
     /* Finally, remove power supply */
     gpio_clearPin(PWR_SW);
