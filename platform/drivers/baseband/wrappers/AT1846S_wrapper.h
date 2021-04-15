@@ -28,8 +28,8 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>   *
  ***************************************************************************/
 
-#ifndef AT1846S_H
-#define AT1846S_H
+#ifndef AT1846S_WRAPPER_H
+#define AT1846S_WRAPPER_H
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -196,4 +196,4 @@ void AT1846S_setAnalogSqlThresh(const uint8_t thresh);
 }
 #endif
 
-#endif /* AT1846S_H */
+#endif /* AT1846S_WRAPPER_H */
