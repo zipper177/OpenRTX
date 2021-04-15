@@ -47,7 +47,7 @@ typedef struct
     uint16_t azimuth;     // Azimuth in degrees
     uint8_t snr;          // Quality of the signal in range 0-99
 }
-__attribute__((packed)) sat_t;
+sat_t;
 
 /**
  * Data structure representing the last state received from the GPS module.
@@ -68,7 +68,7 @@ typedef struct
     float tmg_mag;        // Course over ground, degrees, magnetic
     float tmg_true;       // Course over ground, degrees, true
 }
-__attribute__((packed)) gps_t;
+gps_t;
 
 /**
  * Part of this structure has been commented because the corresponding
@@ -106,7 +106,7 @@ typedef struct
     settings_t settings;
     gps_t gps_data;
 }
-__attribute__((packed)) state_t;
+state_t;
 
 enum TunerMode
 {
