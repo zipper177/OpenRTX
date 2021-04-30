@@ -31,6 +31,10 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * Driver for SKY73210 PLL IC.
  *
@@ -71,5 +75,9 @@ bool SKY73210_isPllLocked();
  * @return true if this driver is using the SPI bus.
  */
 bool SKY73210_spiInUse();
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* SKY73210_H */

@@ -99,6 +99,8 @@ void OpMode_FM::disable()
 
 void OpMode_FM::update(rtxStatus_t *const status, const bool newCfg)
 {
+    (void) newCfg;
+
     // RX logic
     if(status->opStatus == RX)
     {
@@ -129,7 +131,6 @@ void OpMode_FM::update(rtxStatus_t *const status, const bool newCfg)
     {
         radio_disableRtx();
 
-        radio_setVcoFrequency(status->rxFrequency, false);
         radio_enableRx();
         status->opStatus = RX;
         enterRx = false;
@@ -143,8 +144,7 @@ void OpMode_FM::update(rtxStatus_t *const status, const bool newCfg)
         radio_disableRtx();
 
         audio_enableMic();
-        radio_setVcoFrequency(status->txFrequency, true);
-        radio_enableTx(status->txPower, status->txToneEn);
+        radio_enableTx();
 
         status->opStatus = TX;
     }
@@ -158,7 +158,7 @@ void OpMode_FM::update(rtxStatus_t *const status, const bool newCfg)
         enterRx = true;
     }
 
-    /* Led control logic  */
+    // Led control logic
     switch(status->opStatus)
     {
         case RX:
