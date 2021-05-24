@@ -1,5 +1,5 @@
 /***************************************************************************
- *   Copyright (C) 2020 by Federico Amedeo Izzo IU2NUO,                    *
+ *   Copyright (C) 2021 by Federico Amedeo Izzo IU2NUO,                    *
  *                         Niccolò Izzo IU2KIN                             *
  *                         Frederik Saraci IU2NRO                          *
  *                         Silvano Seva IU2KWO                             *
@@ -29,76 +29,53 @@
  ***************************************************************************/
 
 #include <interfaces/radio.h>
-#include <stdio.h>
 
-void radio_init()
+void radio_init(const rtxStatus_t *rtxState)
 {
-    puts("radio_linux: init() called");
+    (void) rtxState;
 }
 
 void radio_terminate()
 {
-    puts("radio_linux: terminate() called");
-}
 
-void radio_setBandwidth(const enum bandwidth bw)
-{
-
-    char *band = (bw == BW_12_5) ? "12.5" :
-                 ((bw == BW_20)  ? "20"   : "25");
-
-    printf("radio_linux: setting bandwidth to %skHz\n", band);
 }
 
 void radio_setOpmode(const enum opmode mode)
 {
-    char *mod = (mode == FM) ? "FM" : "DMR";
-    printf("radio_linux: setting opmode to %s\n", mod);
-}
-
-void radio_setVcoFrequency(const freq_t frequency, const bool isTransmitting)
-{
-    char *txrx = isTransmitting ? "RX" : "RX";
-    printf("radio_linux: setting %s VCO frequency to %d\n", txrx, frequency);
-}
-
-void radio_setCSS(const tone_t rxCss, const tone_t txCss)
-{
-    printf("radio_linux: setting CTCSS: RX to %.1f and TX to %.1f\n",
-           rxCss/10.0f, txCss/10.0f);
+    (void) mode;
 }
 
 bool radio_checkRxDigitalSquelch()
 {
-    puts("radio_linux: radio_checkRxDigitalSquelch(), returning 'true'");
     return true;
 }
 
 void radio_enableRx()
 {
-    puts("radio_linux: enableRx() called");
+
 }
 
-void radio_enableTx(const float txPower, const bool enableCss)
+void radio_enableTx()
 {
-    printf("radio_linux: enabling TX with output power of %.2fW and CTCSS %s\n",
-           txPower, enableCss ? "enabled" : "disabled");
+
 }
 
 void radio_disableRtx()
 {
-    puts("radio_linux: disableRtx() called");
+
 }
 
-void radio_updateCalibrationParams(const rtxStatus_t* rtxCfg)
+void radio_updateConfiguration()
 {
-    (void) rtxCfg;
-    puts("radio_linux: updateCalibrationParams() called");
+
 }
 
-float radio_getRssi(__attribute__((unused)) const freq_t rxFreq)
+float radio_getRssi()
 {
-    // Commented to reduce verbosity on Linux
-    //printf("radio_linux: requested RSSI at freq %d, returning -100dBm\n", rxFreq);
-    return -100.0f;
+    return -154.0f;
+}
+
+enum opstatus radio_getStatus()
+{
+    return OFF;
 }
