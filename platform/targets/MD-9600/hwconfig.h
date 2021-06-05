@@ -99,7 +99,7 @@
 #define SPI2_SDI GPIOB,15
 
 /* Audio control */
-#define SPK_MUTE     GPIOB,6
+#define SPK_MUTE GPIOB,6
 
 /* GPS, for the devices who have it */
 #define GPS_EN   GPIOA,9
