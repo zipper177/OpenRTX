@@ -29,6 +29,7 @@
 #include <interfaces/gpio.h>
 #include <stdio.h>
 #include "emulator.h"
+#include <SDL2/SDL.h>
 
 hwInfo_t hwInfo;
 
@@ -86,7 +87,13 @@ int8_t platform_getChSelector()
 
 bool platform_getPttStatus()
 {
-    return Radio_State.PttStatus;
+    // Read P key status from SDL
+    SDL_PumpEvents();
+    const uint8_t *state = SDL_GetKeyboardState(NULL);
+    if (state[SDL_SCANCODE_P])
+        return true;
+    else
+        return false;
 }
 
 bool platform_pwrButtonStatus()
