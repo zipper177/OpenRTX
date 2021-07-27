@@ -41,7 +41,7 @@ typedef struct
     int8_t utc_timezone;
     bool gps_enabled;
     bool gps_set_time;
-    char callsign[10];    // Plaintext callsign, used for M17
+    char callsign[10];    // Plaintext callsign, for future use
 }
 __attribute__((packed)) settings_t;
 
