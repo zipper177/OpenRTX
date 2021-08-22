@@ -4,6 +4,7 @@
  *                         Frederik Saraci IU2NRO                          *
  *                         Silvano Seva IU2KWO                             *
  *                                                                         *
+ *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
  *   the Free Software Foundation; either version 3 of the License, or     *
@@ -28,61 +29,52 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>   *
  ***************************************************************************/
 
-#ifndef M17_DATATYPES_H
-#define M17_DATATYPES_H
-
-#include <cstdint>
-#include <array>
+#ifndef M17_UTILS_H
+#define M17_UTILS_H
 
 #ifndef __cplusplus
 #error This header is C++ only!
 #endif
 
-
-using call_t    = std::array< uint8_t, 6 >;    // Data type for encoded callsign
-using meta_t    = std::array< uint8_t, 14 >;   // Data type for LSF metadata field
-using payload_t = std::array< uint8_t, 16 >;   // Data type for frame payload field
-using lich_t    = std::array< uint8_t, 12 >;   // Data type for Golay(24,12) encoded LICH data
+#include <array>
 
 
 /**
- * This structure provides bit field definitions for the "TYPE" field
- * contained in an M17 Link Setup Frame.
+ * Utility function allowing to retrieve the value of a single bit from an array
+ * of bytes. Bits are counted scanning from left to right, thus bit number zero
+ * is the leftmost bit of array[0].
+ *
+ * \param array: byte array.
+ * \param pos: bit position inside the array.
+ * \return value of the indexed bit, as boolean variable.
  */
-typedef struct
+template < size_t N >
+inline bool getBit(const std::array< uint8_t, N >& array, const size_t pos)
 {
-    uint16_t stream     : 1;    //< Packet/stream indicator: 0 = packet, 1 = stream
-    uint16_t dataType   : 2;    //< Data type indicator
-    uint16_t encType    : 2;    //< Encryption type
-    uint16_t encSubType : 2;    //< Encryption subtype
-    uint16_t CAN        : 4;    //< Channel Access Number
-    uint16_t            : 4;    //< Reserved, padding to 16 bit
+    size_t i = pos / 8;
+    size_t j = pos % 8;
+    return (array[i] >> (7 - j)) & 0x01;
 }
-__attribute__((packed)) streamType_t;
 
 
 /**
- * Data structure corresponding to a full M17 Link Setup Frame.
+ * Utility function allowing to set the value of a single bit from an array
+ * of bytes. Bits are counted scanning from left to right, thus bit number zero
+ * is the leftmost bit of array[0].
+ *
+ * \param array: byte array.
+ * \param pos: bit position inside the array.
+ * \param bit: bit value to be set.
  */
-typedef struct
+template < size_t N >
+inline void setBit(std::array< uint8_t, N >& array, const size_t pos,
+                   const bool bit)
 {
-    call_t       dst;    //< Destination callsign
-    call_t       src;    //< Source callsign
-    streamType_t type;   //< Stream type information
-    meta_t       meta;   //< Metadata
-    uint16_t     crc;    //< CRC
+    size_t i     = pos / 8;
+    size_t j     = pos % 8;
+    uint8_t mask = 1 << (7 - j);
+    array[i] = (array[i] & ~mask) |
+               (bit ? mask : 0x00);
 }
-__attribute__((packed)) lsf_t;
 
-
-/**
- * Data structure corresponding to a full M17 data frame.
- */
-typedef struct
-{
-    uint16_t   frameNum;  //< Frame number
-    payload_t  payload;   //< Payload data
-}
-__attribute__((packed)) dataFrame_t;
-
-#endif /* M17_DATATYPES_H */
+#endif /* M17_UTILS_H */

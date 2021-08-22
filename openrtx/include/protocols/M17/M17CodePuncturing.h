@@ -4,6 +4,8 @@
  *                         Frederik Saraci IU2NRO                          *
  *                         Silvano Seva IU2KWO                             *
  *                                                                         *
+ *   Adapted from original code written by Rob Riggs, Mobilinkd LLC        *
+ *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
  *   the Free Software Foundation; either version 3 of the License, or     *
@@ -28,61 +30,71 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>   *
  ***************************************************************************/
 
-#ifndef M17_DATATYPES_H
-#define M17_DATATYPES_H
-
-#include <cstdint>
-#include <array>
+#ifndef M17_CODE_PUNCTURING_H
+#define M17_CODE_PUNCTURING_H
 
 #ifndef __cplusplus
 #error This header is C++ only!
 #endif
 
-
-using call_t    = std::array< uint8_t, 6 >;    // Data type for encoded callsign
-using meta_t    = std::array< uint8_t, 14 >;   // Data type for LSF metadata field
-using payload_t = std::array< uint8_t, 16 >;   // Data type for frame payload field
-using lich_t    = std::array< uint8_t, 12 >;   // Data type for Golay(24,12) encoded LICH data
+#include <experimental/array>
+#include "M17Utils.h"
 
 
 /**
- * This structure provides bit field definitions for the "TYPE" field
- * contained in an M17 Link Setup Frame.
+ * Puncture matrix for linx setup frame.
  */
-typedef struct
-{
-    uint16_t stream     : 1;    //< Packet/stream indicator: 0 = packet, 1 = stream
-    uint16_t dataType   : 2;    //< Data type indicator
-    uint16_t encType    : 2;    //< Encryption type
-    uint16_t encSubType : 2;    //< Encryption subtype
-    uint16_t CAN        : 4;    //< Channel Access Number
-    uint16_t            : 4;    //< Reserved, padding to 16 bit
-}
-__attribute__((packed)) streamType_t;
+static constexpr auto LSF_puncture = std::experimental::make_array< uint8_t >
+(
+    1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0,
+    1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0,
+    1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1,
+    0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1,
+    0, 1, 1, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1,
+    1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1
+);
 
 
 /**
- * Data structure corresponding to a full M17 Link Setup Frame.
+ *  Puncture matrix for audio frames.
  */
-typedef struct
-{
-    call_t       dst;    //< Destination callsign
-    call_t       src;    //< Source callsign
-    streamType_t type;   //< Stream type information
-    meta_t       meta;   //< Metadata
-    uint16_t     crc;    //< CRC
-}
-__attribute__((packed)) lsf_t;
+static constexpr auto Audio_puncture = std::experimental::make_array< uint8_t >
+(
+    1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 0
+);
 
 
 /**
- * Data structure corresponding to a full M17 data frame.
+ * Apply a given puncturing scheme to a byte array.
+ *
+ * \param input: input byte array.
+ * \param output: output byte array, containing puntured data.
+ * \param puncture: puncturing matrix, stored as an array of 8 bit values.
+ * \return resulting bit count after punturing.
  */
-typedef struct
+template < size_t IN, size_t OUT, size_t P >
+size_t puncture(const std::array< uint8_t, IN  >& input,
+                      std::array< uint8_t, OUT >& output,
+                const std::array< uint8_t, P   >& puncture)
 {
-    uint16_t   frameNum;  //< Frame number
-    payload_t  payload;   //< Payload data
-}
-__attribute__((packed)) dataFrame_t;
+    size_t outIndex   = 0;
+    size_t punctIndex = 0;
+    size_t bit_count  = 0;
 
-#endif /* M17_DATATYPES_H */
+    for(size_t i = 0; i < 8*IN && outIndex < 8*OUT; i++)
+    {
+        if(puncture[punctIndex++])
+        {
+            setBit(output, outIndex++, getBit(input, i));
+            bit_count++;
+        }
+
+        if(punctIndex == P) punctIndex = 0;
+    }
+
+    return bit_count;
+}
+
+
+#endif /* M17_CODE_PUNCTURING_H */

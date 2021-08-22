@@ -28,8 +28,8 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>   *
  ***************************************************************************/
 
-#ifndef M17FRAME_H
-#define M17FRAME_H
+#ifndef M17_FRAME_H
+#define M17_FRAME_H
 
 #ifndef __cplusplus
 #error This header is C++ only!
@@ -125,4 +125,4 @@ private:
     dataFrame_t data;   ///< Underlying frame data.
 };
 
-#endif /* M17FRAME_H */
+#endif /* M17_FRAME_H */

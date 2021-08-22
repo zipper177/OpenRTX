@@ -28,8 +28,8 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>   *
  ***************************************************************************/
 
-#ifndef M17CALLSIGN_H
-#define M17CALLSIGN_H
+#ifndef M17_CALLSIGN_H
+#define M17_CALLSIGN_H
 
 #ifndef __cplusplus
 #error This header is C++ only!
@@ -62,4 +62,4 @@ bool encode_callsign(const std::string& callsign, call_t& encodedCall,
  */
 std::string decode_callsign(const call_t& encodedCall);
 
-#endif /* M17CALLSIGN_H */
+#endif /* M17_CALLSIGN_H */
