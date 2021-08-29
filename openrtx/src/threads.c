@@ -272,7 +272,6 @@ void *rtx_task(void *arg)
     while(1)
     {
         rtx_taskFunc();
-        sleepFor(0u, 30u);
     }
 }
 
