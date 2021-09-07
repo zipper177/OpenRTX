@@ -36,7 +36,6 @@
 #include <array>
 #include "OpMode.h"
 
-
 /**
  * Specialisation of the OpMode class for the management of M17 operating mode.
  */
