@@ -34,6 +34,7 @@
 #include <ADC1_MDx.h>
 #include <calibInfo_MDx.h>
 #include <interfaces/nvmem.h>
+#include <toneGenerator_MDx.h>
 #include <interfaces/rtc.h>
 #include <interfaces/audio.h>
 #include <chSelector.h>
@@ -66,6 +67,7 @@ void platform_init()
     nvm_init();                      /* Initialise non volatile memory manager */
     nvm_readCalibData(&calibration); /* Load calibration data                  */
     nvm_loadHwInfo(&hwInfo);         /* Load hardware information data         */
+    toneGen_init();                  /* Initialise tone generator              */
     rtc_init();                      /* Initialise RTC                         */
     chSelector_init();               /* Initialise channel selector handler    */
     audio_init();                    /* Initialise audio management module     */
@@ -95,6 +97,7 @@ void platform_terminate()
     adc1_terminate();
     nvm_terminate();
     rtc_terminate();
+    toneGen_terminate();
     chSelector_terminate();
     audio_terminate();
 
