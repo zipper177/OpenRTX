@@ -232,7 +232,7 @@ void radio_enableTx()
 
     gpio_setPin(PA_EN_2);
 
-    if(config.opMode == FM && config->txToneEn)
+    if(config->txToneEn)
     {
         at1846s.enableTxCtcss(config->txTone);
     }
